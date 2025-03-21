@@ -616,7 +616,7 @@
         let currentBookingStep = null;
         
         // Server URL - Change as needed
-        const SERVER_URL = 'http://localhost:3001'; // Connect to the Node.js server port
+        const SERVER_URL = 'https://chatbot-njg2.onrender.com'; // Connect to the Node.js server port
         
         // Event Listeners
         chatButton.addEventListener('click', openChat);
@@ -1125,6 +1125,7 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
+                    credentials: 'include',
                     body: JSON.stringify(payload)
                 });
                 

@@ -29,6 +29,14 @@ app.use(express.urlencoded({ extended: true }));
 // Enable CORS for all origins in development
 app.use(cors());
 
+// Add Content Security Policy headers
+app.use((req, res, next) => {
+    res.setHeader(
+      'Content-Security-Policy',
+      "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; connect-src 'self' *; font-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'"
+    );
+    next();
+  });
 // Conversation state management
 const conversationStates = new Map();
 
