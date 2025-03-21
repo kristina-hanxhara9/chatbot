@@ -30,10 +30,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 // Add Content Security Policy headers
+// Add Content Security Policy headers
 app.use((req, res, next) => {
     res.setHeader(
       'Content-Security-Policy',
-      "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; connect-src 'self' *; font-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'"
+      "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://cdn.jsdelivr.net; connect-src 'self' *; font-src 'self' https://cdn.scite.ai https://cdn.jsdelivr.net data:; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdn.scite.ai"
     );
     next();
   });
