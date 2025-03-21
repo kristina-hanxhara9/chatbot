@@ -1,0 +1,24 @@
+{
+  "name": "transform-ai-chatbot",
+  "version": "1.0.0",
+  "description": "Transform AI Solutions Chatbot with Gemini 1.5",
+  "main": "transform-ai-server.js",
+  "scripts": {
+    "start": "node transform-ai-server.js",
+    "dev": "nodemon transform-ai-server.js"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.1.3",
+    "axios": "^1.8.4",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongoose": "^7.8.6",
+    "node-fetch": "^2.6.7",
+    "nodemailer": "^6.10.0",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

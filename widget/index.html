@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transform AI Solutions Assistant</title>
+    <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
+    <style>
+        /* Reset and Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+        }
+
+        /* Chat Widget Styles */
+        #chat-widget-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        /* Chat Button */
+        #chat-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FF8A00 0%, #00B2DB 100%); /* Orange to Teal gradient */
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        #chat-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        #chat-button .icon {
+            height: 28px;
+            width: auto;
+            display: block;
+            margin: auto; /* Centers the logo in the button */
+            object-fit: contain; /* Ensures the logo fits properly */
+        }
+
+        /* Chat Window */
+        #chat-window {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            width: 350px;
+            height: 500px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            display: none;
+            flex-direction: column;
+            animation: slide-up 0.3s ease forwards;
+            border: 1px solid #e0e0e0;
+        }
+
+        @keyframes slide-up {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Chat Header */
+        #chat-header {
+            background: linear-gradient(135deg, #FF8A00 0%, #00B2DB 100%); /* Orange to Teal gradient */
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #chat-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        #close-chat-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        /* Chat Messages */
+        #chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background-color: #f9f9f9;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 14px;
+            line-height: 1.4;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .message.bot {
+            align-self: flex-start;
+            background-color: white;
+            color: #333;
+            border-bottom-left-radius: 5px;
+            border-left: 3px solid #00B2DB; /* Teal accent */
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background: linear-gradient(135deg, #0062cc 0%, #00B2DB 100%); /* Blue to Teal gradient */
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        /* Welcome Message */
+        .welcome-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 5px;
+        }
+
+        .bot-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FF8A00 0%, #00B2DB 100%); /* Orange to Teal gradient */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            flex-shrink: 0;
+        }
+
+        .welcome-message-container {
+            flex: 1;
+        }
+
+        .welcome-heading {
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #333;
+        }
+
+        /* Options Buttons */
+        .options-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .option-button {
+            background-color: white;
+            border: 1px solid #e4e6eb;
+            border-radius: 18px;
+            padding: 8px 12px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #0062cc; /* Blue color */
+        }
+
+        .option-button:hover {
+            background-color: #f0f7ff;
+            border-color: #00B2DB; /* Teal border */
+            transform: translateY(-1px);
+        }
+
+        /* Chat Input */
+        #chat-input-container {
+            padding: 15px;
+            border-top: 1px solid #e4e6eb;
+            background-color: white;
+        }
+
+        #chat-form {
+            display: flex;
+            gap: 10px;
+        }
+
+        #chat-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #e4e6eb;
+            border-radius: 20px;
+            outline: none;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        #chat-input:focus {
+            border-color: #00B2DB; /* Teal border when focused */
+            box-shadow: 0 0 0 2px rgba(0, 178, 219, 0.1);
+        }
+
+        #send-button {
+            background: linear-gradient(135deg, #FF8A00 0%, #00B2DB 100%); /* Orange to Teal gradient */
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.2s;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #send-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Typing Indicator */
+        .typing-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .typing-indicator {
+            display: inline-flex;
+            align-items: center;
+            background-color: white;
+            padding: 12px 16px;
+            border-radius: 18px;
+            border-bottom-left-radius: 5px;
+            border-left: 3px solid #00B2DB;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            margin: 0 2px;
+            background-color: #00B2DB; /* Teal color */
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: typing-animation 1.4s infinite both;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+            background-color: #0062cc; /* Blue color */
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+            background-color: #FF8A00; /* Orange color */
+        }
+
+        @keyframes typing-animation {
+            0% {
+                opacity: 0.6;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+            100% {
+                opacity: 0.6;
+                transform: scale(1);
+            }
+        }
+        
+        #error-message {
+            color: #e74c3c;
+            font-size: 12px;
+            margin-top: 5px;
+            text-align: center;
+        }
+        
+        #connection-status {
+            font-size: 12px;
+            text-align: center;
+            padding: 5px;
+            border-top: 1px solid #e4e6eb;
+            color: #666;
+        }
+        
+        .powered-by {
+            font-size: 11px;
+            text-align: center;
+            padding: 4px;
+            color: #999;
+            background-color: #f9f9f9;
+            border-top: 1px solid #eee;
+        }
+
+        /* Booking UI Enhancements */
+        .booking-steps {
+            display: flex;
+            justify-content: space-between;
+            background-color: #f3f7fa;
+            border-radius: 10px;
+            padding: 8px;
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+
+        .booking-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 11px;
+            color: #888;
+            position: relative;
+            flex: 1;
+        }
+
+        .booking-step.active {
+            color: #00B2DB;
+            font-weight: 500;
+        }
+
+        .booking-step.completed {
+            color: #FF8A00;
+        }
+
+        .step-number {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 4px;
+            font-size: 10px;
+            font-weight: bold;
+            color: #999;
+        }
+
+        .booking-step.active .step-number {
+            background-color: #00B2DB;
+            color: white;
+        }
+
+        .booking-step.completed .step-number {
+            background-color: #FF8A00;
+            color: white;
+        }
+
+        .booking-step::after {
+            content: "";
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            width: 100%;
+            height: 1px;
+            background-color: #f0f0f0;
+            z-index: -1;
+        }
+
+        .booking-step:last-child::after {
+            display: none;
+        }
+
+        /* Calendar UI */
+        .date-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .date-option {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 10px 8px;
+            text-align: center;
+            cursor: pointer;
+            background-color: white;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .date-option:hover {
+            border-color: #00B2DB;
+            background-color: #f0f7fa;
+        }
+
+        .date-option.selected {
+            border-color: #00B2DB;
+            background-color: #f0f7fa;
+        }
+
+        .time-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .time-option {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 10px 8px;
+            text-align: center;
+            cursor: pointer;
+            background-color: white;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .time-option:hover {
+            border-color: #00B2DB;
+            background-color: #f0f7fa;
+        }
+
+        .time-option.selected {
+            border-color: #00B2DB;
+            background-color: #f0f7fa;
+        }
+
+        .booking-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 12px;
+        }
+
+        .booking-btn {
+            padding: 8px 15px;
+            border-radius: 18px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .back-btn {
+            background-color: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            color: #666;
+        }
+
+        .back-btn:hover {
+            background-color: #f0f0f0;
+        }
+
+        .next-btn {
+            background: linear-gradient(135deg, #FF8A00 0%, #00B2DB 100%);
+            border: none;
+            color: white;
+        }
+
+        .next-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Booking confirmation */
+        .booking-confirmation {
+            background-color: #f0f9fa;
+            border: 1px solid #d0edf0;
+            border-radius: 10px;
+            padding: 12px;
+            margin-top: 10px;
+        }
+
+        .confirmation-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            gap: 8px;
+        }
+
+        .confirmation-icon {
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #FF8A00 0%, #00B2DB 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .confirmation-title {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .confirmation-details {
+            margin-top: 5px;
+        }
+
+        .detail-row {
+            display: flex;
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
+
+        .detail-label {
+            font-weight: 500;
+            color: #666;
+            width: 70px;
+            flex-shrink: 0;
+        }
+
+        .detail-value {
+            color: #333;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 480px) {
+            #chat-window {
+                width: 90%;
+                height: 70%;
+                right: 5%;
+                bottom: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Chat Widget -->
+    <div id="chat-widget-container">
+        <div id="chat-button">
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+        </div>
+        <div id="chat-window">
+            <div id="chat-header">
+                <h3>Transform AI Assistant</h3>
+                <button id="close-chat-btn">&times;</button>
+            </div>
+            <div id="chat-messages">
+                <div class="welcome-container">
+                    <div class="bot-avatar">🤖</div>
+                    <div class="welcome-message-container">
+                        <div class="welcome-heading">Transform AI Solutions</div>
+                        <div class="message bot">
+                            Hello! I'm your AI assistant from Transform AI Solutions. How can I help with your AI and automation needs today?
+                        </div>
+                        <div class="options-container">
+                            <button class="option-button">Our services</button>
+                            <button class="option-button">Chatbot solutions</button>
+                            <button class="option-button">AI agents</button>
+                            <button class="option-button">Book a meeting</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Messages will be added here dynamically -->
+            </div>
+            <div id="connection-status">Connecting to assistant...</div>
+            <div id="chat-input-container">
+                <form id="chat-form">
+                    <input type="text" id="chat-input" placeholder="Type your message here..." autocomplete="off" />
+                    <button type="submit" id="send-button" title="Send message">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M22 2L11 13" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </form>
+                <div id="error-message"></div>
+            </div>
+            <div class="powered-by">Powered by Transform AI Solutions</div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const chatButton = document.getElementById('chat-button');
+        const chatWindow = document.getElementById('chat-window');
+        const closeChatBtn = document.getElementById('close-chat-btn');
+        const chatMessages = document.getElementById('chat-messages');
+        const chatForm = document.getElementById('chat-form');
+        const chatInput = document.getElementById('chat-input');
+        const optionButtons = document.querySelectorAll('.option-button');
+        const errorMessage = document.getElementById('error-message');
+        const connectionStatus = document.getElementById('connection-status');
+        
+        // Chat state
+        let sessionId = localStorage.getItem('transform-ai-session-id') || null;
+        let isConnected = false;
+        let isBookingFlow = false;
+        let currentBookingStep = null;
+        
+        // Server URL - Change as needed
+        const SERVER_URL = 'http://localhost:3001'; // Connect to the Node.js server port
+        
+        // Event Listeners
+        chatButton.addEventListener('click', openChat);
+        closeChatBtn.addEventListener('click', hideChat);
+        chatForm.addEventListener('submit', handleSubmit);
+        
+        // Setup option buttons
+        optionButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const buttonText = button.textContent;
+                sendMessage(buttonText);
+            });
+        });
+        
+        // Functions
+        function openChat() {
+            chatWindow.style.display = 'flex';
+            chatButton.style.display = 'none';
+            chatInput.focus();
+            
+            // Check connection
+            if (!isConnected) {
+                checkConnection();
+            }
+        }
+        
+        function hideChat() {
+            chatWindow.style.display = 'none';
+            chatButton.style.display = 'flex';
+        }
+        
+        async function checkConnection() {
+            connectionStatus.style.display = 'block';
+            
+            try {
+                const response = await fetch(`${SERVER_URL}/health`);
+                if (response.ok) {
+                    isConnected = true;
+                    connectionStatus.style.display = 'none';
+                } else {
+                    connectionStatus.textContent = 'Could not connect to the assistant. Please try again later.';
+                }
+            } catch (error) {
+                connectionStatus.textContent = 'Network error. Please check your connection.';
+            }
+        }
+        
+        function handleSubmit(event) {
+            event.preventDefault();
+            
+            const message = chatInput.value.trim();
+            if (!message) return;
+            
+            // Clear input
+            chatInput.value = '';
+            
+            // Send the message
+            sendMessage(message);
+        }
+        
+        function addMessage(text, isUser) {
+            const messageContainer = document.createElement('div');
+            
+            if (isUser) {
+                // User message
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message user';
+                messageDiv.textContent = text;
+                
+                messageContainer.appendChild(messageDiv);
+            } else {
+                // Process bot response to remove any thought process patterns
+                text = text
+                    .replace(/^(Response:|Answer:|Bot:|Assistant:|AI:)/i, '')
+                    .replace(/^(Thinking:|Analysis:|Let me think:|Here's my thought process:).*?\n\n/is, '')
+                    .replace(/^[\s\n]*/, '')
+                    .trim();
+                    
+                // Check if this is a booking message
+                if (text.includes('📅') || text.includes('🕒') || text.includes('Would you like to book a meeting') || text.includes('Available Dates:') || text.includes('Available Times for') || text.includes('booking')) {
+                    handleBookingMessage(text, messageContainer);
+                } else {
+                    // Regular bot message with avatar
+                    const container = document.createElement('div');
+                    container.className = 'welcome-container';
+                    
+                    const avatarDiv = document.createElement('div');
+                    avatarDiv.className = 'bot-avatar';
+                    avatarDiv.textContent = '🤖';
+                    
+                    const messageContent = document.createElement('div');
+                    messageContent.className = 'welcome-message-container';
+                    
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = 'message bot';
+                    messageDiv.innerHTML = text.replace(/\n/g, '<br>'); // Support line breaks
+                    
+                    messageContent.appendChild(messageDiv);
+                    container.appendChild(avatarDiv);
+                    container.appendChild(messageContent);
+                    
+                    messageContainer.appendChild(container);
+                }
+            }
+            
+            chatMessages.appendChild(messageContainer);
+            
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        function handleBookingMessage(text, messageContainer) {
+            // Create container with avatar
+            const container = document.createElement('div');
+            container.className = 'welcome-container';
+            
+            const avatarDiv = document.createElement('div');
+            avatarDiv.className = 'bot-avatar';
+            avatarDiv.textContent = '🤖';
+            
+            const messageContent = document.createElement('div');
+            messageContent.className = 'welcome-message-container';
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message bot';
+            
+            // Determine booking step
+            if (text.includes('Would you like to book a meeting')) {
+                isBookingFlow = true;
+                currentBookingStep = 'select_day';
+                
+                // Add booking steps indicator
+                const stepsIndicator = createBookingSteps('select_day');
+                
+                messageDiv.innerHTML = text.replace(/\n/g, '<br>');
+                messageContent.appendChild(messageDiv);
+                messageContent.appendChild(stepsIndicator);
+            } 
+            else if (text.includes('Available Dates:')) {
+                currentBookingStep = 'select_date';
+                
+                // Add booking steps indicator
+                const stepsIndicator = createBookingSteps('select_date');
+                
+                // Parse and create date selection UI
+                const dateOptions = parseDateOptions(text);
+                
+                messageDiv.innerHTML = 'Please select a date:';
+                messageContent.appendChild(messageDiv);
+                messageContent.appendChild(stepsIndicator);
+                
+                const dateGrid = document.createElement('div');
+                dateGrid.className = 'date-grid';
+                
+                dateOptions.forEach((dateOption, index) => {
+                    const dateElement = document.createElement('div');
+                    dateElement.className = 'date-option';
+                    dateElement.dataset.index = index + 1;
+                    dateElement.textContent = dateOption;
+                    dateElement.addEventListener('click', function() {
+                        // Remove selected class from all options
+                        document.querySelectorAll('.date-option').forEach(el => {
+                            el.classList.remove('selected');
+                        });
+                        // Add selected class to clicked option
+                        this.classList.add('selected');
+                        // Auto send after short delay
+                        setTimeout(() => {
+                            sendMessage(this.dataset.index);
+                        }, 300);
+                    });
+                    dateGrid.appendChild(dateElement);
+                });
+                
+                messageContent.appendChild(dateGrid);
+            }
+            else if (text.includes('Available Times')) {
+                currentBookingStep = 'select_time';
+                
+                // Add booking steps indicator
+                const stepsIndicator = createBookingSteps('select_time');
+                
+                // Parse and create time selection UI
+                const timeOptions = parseTimeOptions(text);
+                const dateSelected = extractDateSelected(text);
+                
+                messageDiv.innerHTML = `Please select a time for ${dateSelected}:`;
+                messageContent.appendChild(messageDiv);
+                messageContent.appendChild(stepsIndicator);
+                
+                const timeGrid = document.createElement('div');
+                timeGrid.className = 'time-grid';
+                
+                timeOptions.forEach((timeOption, index) => {
+                    const timeElement = document.createElement('div');
+                    timeElement.className = 'time-option';
+                    timeElement.dataset.index = index + 1;
+                    timeElement.textContent = timeOption;
+                    timeElement.addEventListener('click', function() {
+                        // Remove selected class from all options
+                        document.querySelectorAll('.time-option').forEach(el => {
+                            el.classList.remove('selected');
+                        });
+                        // Add selected class to clicked option
+                        this.classList.add('selected');
+                        // Auto send after short delay
+                        setTimeout(() => {
+                            sendMessage(this.dataset.index);
+                        }, 300);
+                    });
+                    timeGrid.appendChild(timeElement);
+                });
+                
+                messageContent.appendChild(timeGrid);
+            }
+            else if (text.includes('You selected:')) {
+                currentBookingStep = 'confirm_details';
+                
+                // Add booking steps indicator
+                const stepsIndicator = createBookingSteps('confirm_details');
+                
+                messageDiv.innerHTML = text.replace(/\n/g, '<br>');
+                messageContent.appendChild(messageDiv);
+                messageContent.appendChild(stepsIndicator);
+                
+                // Add action buttons
+                const actions = document.createElement('div');
+                actions.className = 'booking-actions';
+                
+                const noBtn = document.createElement('button');
+                noBtn.className = 'booking-btn back-btn';
+                noBtn.textContent = 'No, change';
+                noBtn.addEventListener('click', () => sendMessage('no'));
+                
+                const yesBtn = document.createElement('button');
+                yesBtn.className = 'booking-btn next-btn';
+                yesBtn.textContent = 'Yes, continue';
+                yesBtn.addEventListener('click', () => sendMessage('yes'));
+                
+                actions.appendChild(noBtn);
+                actions.appendChild(yesBtn);
+                messageContent.appendChild(actions);
+            }
+            else if (text.includes('What\'s your full name?') || 
+                    text.includes('Name: ') ||
+                    text.includes('What\'s your email address?') ||
+                    text.includes('What would you like to discuss')) {
+                currentBookingStep = 'personal_info';
+                
+                // Add booking steps indicator
+                const stepsIndicator = createBookingSteps('personal_info');
+                
+                messageDiv.innerHTML = text.replace(/\n/g, '<br>');
+                messageContent.appendChild(messageDiv);
+                messageContent.appendChild(stepsIndicator);
+            }
+            else if (text.includes('🎉 Booking Confirmed')) {
+                currentBookingStep = 'complete';
+                isBookingFlow = false;
+                
+                // Add booking steps indicator
+                const stepsIndicator = createBookingSteps('complete');
+                
+                // Format confirmation message
+                const bookingDetails = parseBookingConfirmation(text);
+                
+                messageDiv.innerHTML = '🎉 Booking Confirmed!';
+                messageContent.appendChild(messageDiv);
+                messageContent.appendChild(stepsIndicator);
+                
+                // Create confirmation box
+                const confirmationBox = document.createElement('div');
+                confirmationBox.className = 'booking-confirmation';
+                
+                // Header
+                const confirmHeader = document.createElement('div');
+                confirmHeader.className = 'confirmation-header';
+                
+                const confirmIcon = document.createElement('div');
+                confirmIcon.className = 'confirmation-icon';
+                confirmIcon.innerHTML = '✓';
+                
+                const confirmTitle = document.createElement('div');
+                confirmTitle.className = 'confirmation-title';
+                confirmTitle.textContent = 'Your meeting is confirmed';
+                
+                confirmHeader.appendChild(confirmIcon);
+                confirmHeader.appendChild(confirmTitle);
+                confirmationBox.appendChild(confirmHeader);
+                
+                // Confirmation details
+                const detailsContainer = document.createElement('div');
+                detailsContainer.className = 'confirmation-details';
+                
+                // Add details
+                Object.entries(bookingDetails).forEach(([key, value]) => {
+                    const detailRow = document.createElement('div');
+                    detailRow.className = 'detail-row';
+                    
+                    const label = document.createElement('div');
+                    label.className = 'detail-label';
+                    label.textContent = key + ':';
+                    
+                    const detailValue = document.createElement('div');
+                    detailValue.className = 'detail-value';
+                    detailValue.textContent = value;
+                    
+                    detailRow.appendChild(label);
+                    detailRow.appendChild(detailValue);
+                    detailsContainer.appendChild(detailRow);
+                });
+                
+                confirmationBox.appendChild(detailsContainer);
+                messageContent.appendChild(confirmationBox);
+                
+                // Add confirmation text
+                const confirmText = document.createElement('div');
+                confirmText.className = 'message bot';
+                confirmText.style.marginTop = '10px';
+                confirmText.innerHTML = 'Is there anything else I can help you with?';
+                messageContent.appendChild(confirmText);
+            }
+            else {
+                // Default booking message handling
+                messageDiv.innerHTML = text.replace(/\n/g, '<br>');
+                messageContent.appendChild(messageDiv);
+            }
+            
+            container.appendChild(avatarDiv);
+            container.appendChild(messageContent);
+            
+            messageContainer.appendChild(container);
+        }
+        
+        function createBookingSteps(currentStep) {
+            const stepsContainer = document.createElement('div');
+            stepsContainer.className = 'booking-steps';
+            
+            const steps = [
+                { id: 'select_day', label: 'Date' },
+                { id: 'select_date', label: 'Date' },
+                { id: 'select_time', label: 'Time' },
+                { id: 'confirm_details', label: 'Confirm' },
+                { id: 'personal_info', label: 'Details' },
+                { id: 'complete', label: 'Done' }
+            ];
+            
+            // Display only 4 steps
+            const displaySteps = [
+                { id: 'select_day', label: 'Date' },
+                { id: 'select_time', label: 'Time' },
+                { id: 'personal_info', label: 'Details' },
+                { id: 'complete', label: 'Done' }
+            ];
+            
+            // Determine the stage
+            let activeStepIndex = -1;
+            
+            if (currentStep === 'select_day' || currentStep === 'select_date') {
+                activeStepIndex = 0; // Date
+            } else if (currentStep === 'select_time') {
+                activeStepIndex = 1; // Time
+            } else if (currentStep === 'confirm_details' || currentStep === 'personal_info') {
+                activeStepIndex = 2; // Details
+            } else if (currentStep === 'complete') {
+                activeStepIndex = 3; // Done
+            }
+            
+            // Create step elements
+            displaySteps.forEach((step, index) => {
+                const stepElement = document.createElement('div');
+                stepElement.className = 'booking-step';
+                
+                if (index === activeStepIndex) {
+                    stepElement.classList.add('active');
+                } else if (index < activeStepIndex) {
+                    stepElement.classList.add('completed');
+                }
+                
+                const stepNumber = document.createElement('div');
+                stepNumber.className = 'step-number';
+                stepNumber.textContent = index + 1;
+                
+                const stepLabel = document.createElement('div');
+                stepLabel.textContent = step.label;
+                
+                stepElement.appendChild(stepNumber);
+                stepElement.appendChild(stepLabel);
+                stepsContainer.appendChild(stepElement);
+            });
+            
+            return stepsContainer;
+        }
+        
+        function parseDateOptions(text) {
+            // Extract date options from text
+            const dateOptions = [];
+            const lines = text.split('\n');
+            
+            for (const line of lines) {
+                if (line.match(/^\d+\.\s/)) {
+                    const dateText = line.replace(/^\d+\.\s/, '').trim();
+                    dateOptions.push(dateText);
+                }
+            }
+            
+            return dateOptions;
+        }
+        
+        function parseTimeOptions(text) {
+            // Extract time options from text
+            const timeOptions = [];
+            const lines = text.split('\n');
+            
+            for (const line of lines) {
+                if (line.match(/^\d+\.\s/)) {
+                    const timeText = line.replace(/^\d+\.\s/, '').trim();
+                    timeOptions.push(timeText);
+                }
+            }
+            
+            return timeOptions;
+        }
+        
+        function extractDateSelected(text) {
+            // Extract selected date from time selection message
+            const match = text.match(/Available Times for (.*?):/);
+            return match ? match[1] : '';
+        }
+        
+        function parseBookingConfirmation(text) {
+            const details = {};
+            
+            // Extract date
+            const dateMatch = text.match(/📅 Date: (.*?)(\n|$)/);
+            if (dateMatch) details['Date'] = dateMatch[1];
+            
+            // Extract time
+            const timeMatch = text.match(/🕒 Time: (.*?)(\n|$)/);
+            if (timeMatch) details['Time'] = timeMatch[1];
+            
+            // Extract name
+            const nameMatch = text.match(/👤 Name: (.*?)(\n|$)/);
+            if (nameMatch) details['Name'] = nameMatch[1];
+            
+            // Extract email
+            const emailMatch = text.match(/✉️ Email: (.*?)(\n|$)/);
+            if (emailMatch) details['Email'] = emailMatch[1];
+            
+            // Extract topic
+            const topicMatch = text.match(/💡 Topic: (.*?)(\n|$)/);
+            if (topicMatch) details['Topic'] = topicMatch[1];
+            
+            return details;
+        }
+        
+        function showTypingIndicator() {
+            const typingContainer = document.createElement('div');
+            typingContainer.className = 'typing-container';
+            typingContainer.id = 'typing-indicator';
+            
+            const avatarDiv = document.createElement('div');
+            avatarDiv.className = 'bot-avatar';
+            avatarDiv.textContent = '🤖';
+            
+            const typingIndicator = document.createElement('div');
+            typingIndicator.className = 'typing-indicator';
+            
+            // Add animated dots
+            for (let i = 0; i < 3; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'typing-dot';
+                typingIndicator.appendChild(dot);
+            }
+            
+            typingContainer.appendChild(avatarDiv);
+            typingContainer.appendChild(typingIndicator);
+            
+            chatMessages.appendChild(typingContainer);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            return typingContainer;
+        }
+        
+        async function sendMessage(message) {
+            // Display user message
+            addMessage(message, true);
+            
+            // Show typing indicator
+            const typingContainer = showTypingIndicator();
+            
+            // Disable input while waiting for response
+            chatInput.disabled = true;
+            document.getElementById('send-button').disabled = true;
+            errorMessage.textContent = '';
+            
+            try {
+                // Prepare payload
+                const payload = {
+                    message: message,
+                    sessionId: sessionId
+                };
+                
+                const response = await fetch(`${SERVER_URL}/chat`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                // Remove typing indicator
+                if (typingContainer) {
+                    chatMessages.removeChild(typingContainer);
+                }
+                
+                // Add bot response to chat
+                addMessage(data.response, false);
+                
+                // Store session ID
+                if (data.sessionId) {
+                    sessionId = data.sessionId;
+                    localStorage.setItem('transform-ai-session-id', sessionId);
+                }
+            } catch (error) {
+                console.error('Error sending message:', error);
+                
+                // Remove typing indicator
+                if (typingContainer) {
+                    chatMessages.removeChild(typingContainer);
+                }
+                
+                // Display error message
+                errorMessage.textContent = 'Sorry, there was a problem connecting to the assistant. Please try again.';
+            } finally {
+                // Re-enable input
+                chatInput.disabled = false;
+                document.getElementById('send-button').disabled = false;
+                chatInput.focus();
+            }
+        }
+        
+        // Initialize - Check for URL param to auto-open
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('open-chat')) {
+                openChat();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transform AI - Admin View</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .conversation-row {
+            cursor: pointer;
+        }
+        .conversation-row:hover {
+            background-color: #f8f9fa;
+        }
+        .message {
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            border-radius: 10px;
+            max-width: 80%;
+        }
+        .user-message {
+            background-color: #f0f7ff;
+            border-left: 3px solid #0062cc;
+            margin-left: auto;
+        }
+        .bot-message {
+            background-color: #f8f9fa;
+            border-left: 3px solid #00B2DB;
+        }
+        .messages-container {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Transform AI - Conversations</h1>
+        <div class="alert alert-info">
+            <strong>Note:</strong> Make sure your Node.js server is running on port 3001 for this admin panel to work.
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Conversations</h5>
+                    </div>
+                    <div class="card-body" style="max-height: 600px; overflow-y: auto;">
+                        <div class="list-group" id="conversations-list">
+                            <!-- Conversations will be loaded here -->
+                            <div class="text-center" id="loading-conversations">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <p>Loading conversations...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Messages</h5>
+                        <small id="conversation-info"></small>
+                    </div>
+                    <div class="card-body messages-container" id="messages-container">
+                        <div class="text-center" id="select-conversation">
+                            <p>Select a conversation to view messages</p>
+                        </div>
+                        <div class="text-center d-none" id="loading-messages">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p>Loading messages...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Define the API base URL - point to your Node.js server
+        const API_BASE_URL = 'http://localhost:3001';
+        
+        // Function to format date
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return new Intl.DateTimeFormat('en-US', {
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            }).format(date);
+        }
+
+        // Function to load conversations
+        async function loadConversations() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/admin/conversations`);
+                if (!response.ok) {
+                    throw new Error('Failed to load conversations');
+                }
+                
+                const data = await response.json();
+                const conversations = data.conversations;
+                
+                const listContainer = document.getElementById('conversations-list');
+                document.getElementById('loading-conversations').remove();
+                
+                if (conversations.length === 0) {
+                    listContainer.innerHTML = '<p class="text-center">No conversations found</p>';
+                    return;
+                }
+                
+                conversations.forEach(conversation => {
+                    const listItem = document.createElement('a');
+                    listItem.className = 'list-group-item list-group-item-action';
+                    listItem.href = '#';
+                    
+                    const startDate = new Date(conversation.started_at);
+                    const lastDate = new Date(conversation.last_message_at);
+                    
+                    // Get session ID and truncate if needed
+                    const sessionIdDisplay = conversation.session_id.length > 8 
+                        ? conversation.session_id.substring(0, 8) + '...'
+                        : conversation.session_id;
+                    
+                    listItem.innerHTML = `
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">Session: ${sessionIdDisplay}</h6>
+                            <small>${formatDate(startDate)}</small>
+                        </div>
+                        <small>Last activity: ${formatDate(lastDate)}</small>
+                        <p class="mb-1"><small>Messages: ${conversation.message_count || 0}</small></p>
+                    `;
+                    
+                    listItem.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        document.querySelectorAll('.list-group-item').forEach(el => el.classList.remove('active'));
+                        this.classList.add('active');
+                        loadMessages(conversation._id || conversation.id, conversation.session_id);
+                    });
+                    
+                    listContainer.appendChild(listItem);
+                });
+                
+            } catch (error) {
+                console.error('Error loading conversations:', error);
+                document.getElementById('loading-conversations').innerHTML = `
+                    <p class="text-danger">Error loading conversations: ${error.message}</p>
+                    <p>Make sure your Node.js server is running on port 3001</p>
+                `;
+            }
+        }
+        
+        // Function to load messages for a conversation
+        async function loadMessages(conversationId, sessionId) {
+            try {
+                document.getElementById('select-conversation').classList.add('d-none');
+                const loadingEl = document.getElementById('loading-messages');
+                loadingEl.classList.remove('d-none');
+                
+                document.getElementById('conversation-info').textContent = `Session ID: ${sessionId}`;
+                document.getElementById('messages-container').innerHTML = '';
+                document.getElementById('messages-container').appendChild(loadingEl);
+                
+                const response = await fetch(`${API_BASE_URL}/api/admin/conversations/${conversationId}/messages`);
+                if (!response.ok) {
+                    throw new Error('Failed to load messages');
+                }
+                
+                const data = await response.json();
+                const messages = data.messages;
+                
+                loadingEl.classList.add('d-none');
+                const messagesContainer = document.getElementById('messages-container');
+                
+                if (messages.length === 0) {
+                    messagesContainer.innerHTML = '<p class="text-center">No messages found</p>';
+                    return;
+                }
+                
+                messages.forEach(message => {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = `message ${message.is_user ? 'user-message' : 'bot-message'}`;
+                    
+                    const contentP = document.createElement('p');
+                    contentP.className = 'mb-1';
+                    contentP.textContent = message.content;
+                    
+                    const timeSmall = document.createElement('small');
+                    timeSmall.className = 'text-muted';
+                    timeSmall.textContent = formatDate(message.timestamp);
+                    
+                    messageDiv.appendChild(contentP);
+                    messageDiv.appendChild(timeSmall);
+                    
+                    messagesContainer.appendChild(messageDiv);
+                });
+                
+                // Scroll to bottom
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                
+            } catch (error) {
+                console.error('Error loading messages:', error);
+                document.getElementById('loading-messages').classList.add('d-none');
+                document.getElementById('messages-container').innerHTML = `
+                    <p class="text-danger">Error loading messages: ${error.message}</p>
+                `;
+            }
+        }
+        
+        // Load conversations when page loads
+        document.addEventListener('DOMContentLoaded', loadConversations);
+    </script>
+</body>
+</html>

@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transform AI - Appointment Scheduler</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .appointment-card {
+            border-left: 4px solid #00B2DB;
+            margin-bottom: 15px;
+        }
+        .appointment-card:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .slot-card {
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid #eee;
+        }
+        .slot-card:hover {
+            border-color: #00B2DB;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .slot-date {
+            font-weight: bold;
+            color: #333;
+        }
+        .slot-time {
+            color: #666;
+        }
+        #refreshBtn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4 mb-5">
+        <h1 class="mb-4">Transform AI - Appointment Scheduler</h1>
+        
+        <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="appointments-tab" data-bs-toggle="tab" data-bs-target="#appointments" type="button" role="tab">Appointments</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="slots-tab" data-bs-toggle="tab" data-bs-target="#slots" type="button" role="tab">Available Slots</button>
+            </li>
+        </ul>
+        
+        <div class="tab-content" id="myTabContent">
+            <!-- Appointments Tab -->
+            <div class="tab-pane fade show active" id="appointments" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3>Upcoming Appointments</h3>
+                        <div id="appointmentsList" class="mt-3">
+                            <div class="text-center p-5">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <p class="mt-2">Loading appointments...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Available Slots Tab -->
+            <div class="tab-pane fade" id="slots" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3>Available Time Slots</h3>
+                        <div id="slotsList" class="mt-3">
+                            <div class="text-center p-5">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <p class="mt-2">Loading available slots...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Refresh Button -->
+    <button id="refreshBtn" class="btn btn-primary btn-lg rounded-circle shadow">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
+            <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
+        </svg>
+    </button>
+    
+    <!-- Cancellation Modal -->
+    <div class="modal fade" id="cancelModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Cancel Appointment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to cancel this appointment?</p>
+                    <div id="cancelAppointmentDetails"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" id="confirmCancel">Cancel Appointment</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Global variables
+        let currentAppointments = [];
+        let currentSlots = [];
+        let appointmentToCancel = null;
+        const cancelModal = new bootstrap.Modal(document.getElementById('cancelModal'));
+        
+        // API endpoints
+        const API_URL = 'http://localhost:3001';
+        
+        // Function to load appointments
+        async function loadAppointments() {
+            try {
+                const response = await fetch(`${API_URL}/api/appointments`);
+                if (!response.ok) {
+                    throw new Error('Failed to load appointments');
+                }
+                
+                const data = await response.json();
+                currentAppointments = data;
+                displayAppointments(data);
+            } catch (error) {
+                console.error('Error loading appointments:', error);
+                document.getElementById('appointmentsList').innerHTML = `
+                    <div class="alert alert-danger">
+                        Error loading appointments: ${error.message}
+                    </div>
+                `;
+            }
+        }
+        
+        // Function to load available slots
+        async function loadAvailableSlots() {
+            try {
+                const response = await fetch(`${API_URL}/api/appointments/slots`);
+                if (!response.ok) {
+                    throw new Error('Failed to load available slots');
+                }
+                
+                const data = await response.json();
+                currentSlots = data;
+                displayAvailableSlots(data);
+            } catch (error) {
+                console.error('Error loading slots:', error);
+                document.getElementById('slotsList').innerHTML = `
+                    <div class="alert alert-danger">
+                        Error loading available slots: ${error.message}
+                    </div>
+                `;
+            }
+        }
+        
+        // Function to display appointments
+        function displayAppointments(appointments) {
+            const container = document.getElementById('appointmentsList');
+            
+            if (appointments.length === 0) {
+                container.innerHTML = `
+                    <div class="alert alert-info">
+                        No appointments scheduled.
+                    </div>
+                `;
+                return;
+            }
+            
+            // Sort by date
+            const sortedAppointments = [...appointments].sort((a, b) => 
+                new Date(a.dateTime) - new Date(b.dateTime)
+            );
+            
+            container.innerHTML = '';
+            
+            sortedAppointments.forEach(appointment => {
+                const card = document.createElement('div');
+                card.className = 'card appointment-card';
+                card.innerHTML = `
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="card-title">${appointment.name}</h5>
+                            <button class="btn btn-sm btn-outline-danger cancel-btn" data-id="${appointment.id}">
+                                Cancel
+                            </button>
+                        </div>
+                        <h6 class="card-subtitle mb-2 text-muted">${appointment.formattedDate} at ${appointment.formattedTime}</h6>
+                        <p class="card-text"><strong>Email:</strong> ${appointment.email}</p>
+                        <p class="card-text"><strong>Topic:</strong> ${appointment.topic || 'Not specified'}</p>
+                    </div>
+                `;
+                
+                // Add event listener to cancel button
+                const cancelBtn = card.querySelector('.cancel-btn');
+                cancelBtn.addEventListener('click', () => showCancelModal(appointment));
+                
+                container.appendChild(card);
+            });
+        }
+        
+        // Function to display available slots
+        function displayAvailableSlots(slots) {
+            const container = document.getElementById('slotsList');
+            
+            if (slots.length === 0) {
+                container.innerHTML = `
+                    <div class="alert alert-info">
+                        No available slots. Click the refresh button to generate new slots.
+                    </div>
+                `;
+                return;
+            }
+            
+            // Group slots by date
+            const slotsByDate = {};
+            slots.forEach(slot => {
+                const date = slot.formattedDate;
+                if (!slotsByDate[date]) {
+                    slotsByDate[date] = [];
+                }
+                slotsByDate[date].push(slot);
+            });
+            
+            container.innerHTML = '';
+            
+            // Create a row for each date
+            Object.entries(slotsByDate).forEach(([date, dateSlots]) => {
+                const dateHeader = document.createElement('h4');
+                dateHeader.className = 'mt-4 mb-3';
+                dateHeader.textContent = date;
+                
+                container.appendChild(dateHeader);
+                
+                const row = document.createElement('div');
+                row.className = 'row';
+                
+                // Create a card for each time slot
+                dateSlots.forEach(slot => {
+                    const col = document.createElement('div');
+                    col.className = 'col-md-3 col-sm-6 mb-3';
+                    
+                    const card = document.createElement('div');
+                    card.className = 'card slot-card h-100';
+                    card.innerHTML = `
+                        <div class="card-body text-center">
+                            <p class="slot-time">${slot.formattedTime}</p>
+                            <button class="btn btn-sm btn-primary mt-2">
+                                Book
+                            </button>
+                        </div>
+                    `;
+                    
+                    // Add event listener for manual booking
+                    card.querySelector('button').addEventListener('click', () => {
+                        const name = prompt('Enter client name:');
+                        if (name) {
+                            const email = prompt('Enter client email:');
+                            if (email) {
+                                const topic = prompt('Enter meeting topic (optional):');
+                                bookSlot(slot.id, name, email, topic);
+                            }
+                        }
+                    });
+                    
+                    col.appendChild(card);
+                    row.appendChild(col);
+                });
+                
+                container.appendChild(row);
+            });
+        }
+        
+        // Function to show cancel modal
+        function showCancelModal(appointment) {
+            appointmentToCancel = appointment;
+            
+            const detailsContainer = document.getElementById('cancelAppointmentDetails');
+            detailsContainer.innerHTML = `
+                <p><strong>Client:</strong> ${appointment.name}</p>
+                <p><strong>Date:</strong> ${appointment.formattedDate}</p>
+                <p><strong>Time:</strong> ${appointment.formattedTime}</p>
+            `;
+            
+            cancelModal.show();
+        }
+        
+        // Function to cancel appointment
+        async function cancelAppointment(appointmentId) {
+            try {
+                const response = await fetch(`${API_URL}/api/appointments/${appointmentId}`, {
+                    method: 'DELETE'
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to cancel appointment');
+                }
+                
+                // Reload data
+                loadAppointments();
+                loadAvailableSlots();
+                
+                // Close modal
+                cancelModal.hide();
+                
+                // Show success message
+                alert('Appointment cancelled successfully');
+            } catch (error) {
+                console.error('Error cancelling appointment:', error);
+                alert(`Error cancelling appointment: ${error.message}`);
+            }
+        }
+        
+        // Function to book a slot
+        async function bookSlot(slotId, name, email, topic) {
+            try {
+                const response = await fetch(`${API_URL}/api/appointments`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        slotId,
+                        name,
+                        email,
+                        topic
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to book appointment');
+                }
+                
+                // Reload data
+                loadAppointments();
+                loadAvailableSlots();
+                
+                // Show success message
+                alert('Appointment booked successfully');
+            } catch (error) {
+                console.error('Error booking appointment:', error);
+                alert(`Error booking appointment: ${error.message}`);
+            }
+        }
+        
+        // Function to refresh available slots
+        async function refreshSlots() {
+            try {
+                const response = await fetch(`${API_URL}/api/appointments/slots/refresh`, {
+                    method: 'POST'
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to refresh slots');
+                }
+                
+                // Reload data
+                loadAvailableSlots();
+                
+                // Show success message
+                alert('Available slots refreshed successfully');
+            } catch (error) {
+                console.error('Error refreshing slots:', error);
+                alert(`Error refreshing slots: ${error.message}`);
+            }
+        }
+        
+        // Event listeners
+        document.getElementById('refreshBtn').addEventListener('click', refreshSlots);
+        document.getElementById('confirmCancel').addEventListener('click', () => {
+            if (appointmentToCancel) {
+                cancelAppointment(appointmentToCancel.id);
+            }
+        });
+        
+        // Tab change event
+        document.querySelectorAll('button[data-bs-toggle="tab"]').forEach(tab => {
+            tab.addEventListener('shown.bs.tab', (event) => {
+                const target = event.target.getAttribute('data-bs-target');
+                if (target === '#appointments') {
+                    loadAppointments();
+                } else if (target === '#slots') {
+                    loadAvailableSlots();
+                }
+            });
+        });
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadAppointments();
+        });
+    </script>
+</body>
+</html>
