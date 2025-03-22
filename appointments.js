@@ -77,12 +77,12 @@ async function sendTelegramNotification(message) {
   }
 }
 
-// Generate next 14 days of available slots
+// Generate appointment slots for the next 12 months
 function generateDefaultSlots() {
   const slots = [];
   const now = new Date();
   
-  // Generate slots for the next 12 months
+  // Generate slots for the next 12 months (365 days)
   for (let day = 0; day < 365; day++) {
     const date = new Date(now);
     date.setDate(date.getDate() + day);
