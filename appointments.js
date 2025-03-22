@@ -82,8 +82,8 @@ function generateDefaultSlots() {
   const slots = [];
   const now = new Date();
   
-  // Generate slots for the next 14 days
-  for (let day = 0; day < 14; day++) {
+  // Generate slots for the next 12 months
+  for (let day = 0; day < 365; day++) {
     const date = new Date(now);
     date.setDate(date.getDate() + day);
     
@@ -122,20 +122,34 @@ function generateDefaultSlots() {
 }
 
 // Get available appointment slots
-async function getAvailableSlots() {
+// Optional modification to getAvailableSlots() for month-by-month loading
+async function getAvailableSlots(startDate, endDate) {
   try {
-    // Get all appointments
-    const appointments = await Appointment.find();
-    
-    // Get all slots
-    let slots = await Slot.find();
-    
-    // If no slots exist yet, create and save them
-    if (slots.length === 0) {
-      const defaultSlots = generateDefaultSlots();
-      await Slot.insertMany(defaultSlots);
-      slots = defaultSlots;
+    // Default to current month if no date range specified
+    if (!startDate) {
+      startDate = new Date();
+      startDate.setDate(1); // First day of current month
     }
+    
+    if (!endDate) {
+      endDate = new Date(startDate);
+      endDate.setMonth(endDate.getMonth() + 1, 0); // Last day of the month
+      endDate.setHours(23, 59, 59, 999);
+    }
+    
+    // Convert to ISO strings for comparison
+    const startIso = startDate.toISOString();
+    const endIso = endDate.toISOString();
+    
+    // Get all appointments
+    const appointments = await Appointment.find({
+      dateTime: { $gte: startIso, $lte: endIso }
+    });
+    
+    // Get slots for the specified date range
+    let slots = await Slot.find({
+      date: { $gte: startIso, $lte: endIso }
+    });
     
     // Filter out slots that are already booked
     const bookedTimes = new Set(appointments.map(app => app.dateTime));
