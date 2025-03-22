@@ -931,12 +931,8 @@
         });
         
         doneBtn.addEventListener('click', function() {
-            if (window.opener) {
-                window.close();
-            } else {
-                window.location.href = '/';
-            }
-        });
+    window.location.href = '/';
+});
         
         // Initialize
         document.addEventListener('DOMContentLoaded', loadAvailableSlots);
