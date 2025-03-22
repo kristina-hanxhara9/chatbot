@@ -125,15 +125,14 @@ function generateDefaultSlots() {
 // Optional modification to getAvailableSlots() for month-by-month loading
 async function getAvailableSlots(startDate, endDate) {
   try {
-    // Default to current month if no date range specified
+    // Default to showing slots for an entire year if no date range specified
     if (!startDate) {
       startDate = new Date();
-      startDate.setDate(1); // First day of current month
     }
     
     if (!endDate) {
       endDate = new Date(startDate);
-      endDate.setMonth(endDate.getMonth() + 1, 0); // Last day of the month
+      endDate.setFullYear(endDate.getFullYear() + 1); // Show a full year of slots
       endDate.setHours(23, 59, 59, 999);
     }
     
