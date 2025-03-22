@@ -127,7 +127,8 @@
         const cancelModal = new bootstrap.Modal(document.getElementById('cancelModal'));
         
         // API endpoints
-        const API_URL = '/api/scheduler';
+        const SCHEDULER_API_URL       = `${SERVER_URL}/api/scheduler`;
+
         
         // Function to load appointments
         async function loadAppointments() {
