@@ -1,8 +1,8 @@
 /**
  * TransformAI Appointment Widget
- * Version: 1.0.0
+ * Version: 1.0.1
  * 
- * This script creates a button that opens a popup for booking appointments
+ * This script creates a button that opens a new tab for booking appointments
  * with the TransformAI Solutions team.
  * 
  * Usage: 
@@ -100,20 +100,8 @@
       const appointmentButton = document.getElementById('transform-ai-appointment-button');
       
       appointmentButton.addEventListener('click', () => {
-        // Calculate popup dimensions
-        const width = Math.min(900, window.innerWidth * 0.9);
-        const height = Math.min(700, window.innerHeight * 0.9);
-        
-        // Calculate centered position
-        const left = (window.innerWidth - width) / 2;
-        const top = (window.innerHeight - height) / 2;
-        
-        // Open booking page in popup window
-        window.open(
-          `${SERVER_URL}/booking.html`, 
-          'TransformAI_Booking',
-          `width=${width},height=${height},top=${top},left=${left},scrollbars=yes,resizable=yes`
-        );
+        // Open booking page in a new tab using _blank
+        window.open(`${SERVER_URL}/booking.html`, '_blank');
       });
     };
   

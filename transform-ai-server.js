@@ -942,11 +942,19 @@ app.post('/chat', async (req, res) => {
     }
 });
 
-// Appointment API endpoints
 // Get available slots
 app.get('/api/appointments/slots', async (req, res) => {
     try {
-        const slots = await appointments.getAvailableSlots();
+        // Get optional query parameters
+        const startDateParam = req.query.startDate;
+        const endDateParam = req.query.endDate;
+        
+        // Parse dates if provided
+        const startDate = startDateParam ? new Date(startDateParam) : null;
+        const endDate = endDateParam ? new Date(endDateParam) : null;
+        
+        // Call getAvailableSlots with parameters
+        const slots = await appointments.getAvailableSlots(startDate, endDate);
         res.json(slots);
     } catch (error) {
         console.error('Error getting available slots:', error);
