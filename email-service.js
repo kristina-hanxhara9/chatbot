@@ -62,7 +62,7 @@ class EmailService {
 
     try {
       const defaultOptions = {
-        from: `"Transform AI Solutions" <${process.env.EMAIL_FROM || 'appointments@transform-ai-solutions.com'}>`,
+        from: `"TransformAI" <${process.env.EMAIL_FROM || 'appointments@transform-ai-solutions.com'}>`,
       };
 
       const mailOptions = { ...defaultOptions, ...options };
@@ -91,7 +91,7 @@ class EmailService {
     
     return this.sendEmail({
       to: appointment.email,
-      subject: 'Your Appointment Confirmation - Transform AI Solutions',
+      subject: 'Your Appointment Confirmation - TransformAI',
       html: getConfirmationEmailHtml(appointment, baseUrl),
       text: `
         Appointment Confirmation
@@ -107,7 +107,7 @@ class EmailService {
         ${baseUrl}/cancel-appointment
 
         Best regards,
-        Transform AI Solutions Team
+        TransformAI Team
       `
     });
   }
@@ -116,7 +116,7 @@ class EmailService {
   async sendCancellationEmail(appointment) {
     return this.sendEmail({
       to: appointment.email,
-      subject: 'Appointment Cancelled - Transform AI Solutions',
+      subject: 'Appointment Cancelled - TransformAI',
       html: getCancellationEmailHtml(appointment),
       text: `
         Appointment Cancellation
@@ -132,7 +132,7 @@ class EmailService {
         https://transform-ai-solutions.com/booking
 
         Best regards,
-        Transform AI Solutions Team
+        TransformAI Team
       `
     });
   }

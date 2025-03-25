@@ -84,7 +84,7 @@ function getConfirmationEmailHtml(appointment, baseUrl) {
             <div class="content">
                 <p>Hello ${appointment.name},</p>
                 
-                <p>Your appointment with Transform AI Solutions has been confirmed. Here are the details:</p>
+                <p>Your appointment with TransformAI has been confirmed. Here are the details:</p>
                 
                 <div class="appointment-details">
                     <div class="detail-row">
@@ -107,11 +107,11 @@ function getConfirmationEmailHtml(appointment, baseUrl) {
                 
                 <p>We look forward to meeting with you!</p>
                 
-                <p>Best regards,<br>Transform AI Solutions Team</p>
+                <p>Best regards,<br>TransformAI Team</p>
             </div>
             
             <div class="footer">
-                <p>© ${new Date().getFullYear()} Transform AI Solutions. All rights reserved.</p>
+                <p>© ${new Date().getFullYear()} TransformAI. All rights reserved.</p>
             </div>
         </div>
     </body>
@@ -193,7 +193,7 @@ function getCancellationEmailHtml(appointment) {
             <div class="content">
                 <p>Hello ${appointment.name},</p>
                 
-                <p>Your appointment with Transform AI Solutions has been cancelled. Here are the details of the cancelled appointment:</p>
+                <p>Your appointment with TransformAI has been cancelled. Here are the details of the cancelled appointment:</p>
                 
                 <div class="appointment-details">
                     <div class="detail-row">
@@ -216,11 +216,11 @@ function getCancellationEmailHtml(appointment) {
                 
                 <p>Thank you for your understanding.</p>
                 
-                <p>Best regards,<br>Transform AI Solutions Team</p>
+                <p>Best regards,<br>TransformAI Team</p>
             </div>
             
             <div class="footer">
-                <p>© ${new Date().getFullYear()} Transform AI Solutions. All rights reserved.</p>
+                <p>© ${new Date().getFullYear()} TransformAI. All rights reserved.</p>
             </div>
         </div>
     </body>

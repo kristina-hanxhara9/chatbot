@@ -824,7 +824,7 @@ async function generateAIResponse(userMessage, conversationHistory = [], session
         // Enhanced prompt template with stronger instructions against verbose responses
         const promptTemplate = process.env.AI_SOLUTIONS_PROMPT || 
 `
-You are a friendly AI assistant for Transform AI Solutions. Keep your answers brief, conversational, and end with a question.
+You are a friendly AI assistant for TransformAI. Keep your answers brief, conversational, and end with a question.
 
 Our mission: We make AI affordable and accessible for small and medium businesses, helping them unlock the power of AI without high costs, just the benefits. We help businesses transform by improving marketing strategies, client acquisition, relationship management, and workflow efficiency.
 
@@ -838,7 +838,7 @@ When responding:
 7. Never provide lengthy explanations
 8. Always present AI as a transformative but accessible technology
 
-Company info: Transform AI Solutions helps businesses evolve through affordable AI implementation, like transforming a caterpillar into a butterfly.
+Company info: TransformAI helps businesses evolve through affordable AI implementation, like transforming a caterpillar into a butterfly.
 
 QUESTION: {{QUESTION}}
 `;
@@ -1145,7 +1145,7 @@ async function startServer() {
         
         // Start the Express server
         app.listen(PORT, () => {
-            console.log(`Transform AI Solutions server running on port ${PORT}`);
+            console.log(`TransformAI server running on port ${PORT}`);
             console.log(`Data storage: ${isMongoConnected ? 'MongoDB' : 'In-Memory'}`);
             console.log(`Server URL: http://localhost:${PORT}`);
         });

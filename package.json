@@ -1,7 +1,7 @@
 {
   "name": "transform-ai-chatbot",
   "version": "1.0.0",
-  "description": "Transform AI Solutions Chatbot with Gemini 1.5",
+  "description": "TransformAI Chatbot with Gemini 1.5",
   "main": "transform-ai-server.js",
   "scripts": {
     "start": "node transform-ai-server.js",

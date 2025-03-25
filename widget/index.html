@@ -3,741 +3,558 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transform AI Solutions Assistant</title>
+    <title>Transform AI Assistant</title>
     <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
     <style>
         /* Reset and Global Styles */
-/* Reset and Global Styles */
-#transform-ai-chat-container * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Arial', sans-serif;
-}
-
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  width: 100%;
-  overflow-x: hidden;
-}
-
-/* Ensure proper viewport setup */
-@viewport {
-  width: device-width;
-  zoom: 1.0;
-}
-
-/* Chat Widget Styles */
-#transform-ai-chat-container {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  z-index: 9999;
-}
-
-/* Chat Button */
-#transform-ai-chat-button {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #FF8A00 0%, #00B2DB 100%);
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease;
-}
-
-#transform-ai-chat-button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
-}
-
-#transform-ai-chat-button .icon {
-  height: 28px;
-  width: auto;
-  display: block;
-  margin: auto;
-}
-
-/* Chat Window */
-#transform-ai-chat-window {
-  position: absolute;
-  bottom: 70px;
-  right: 0;
-  width: 350px;
-  height: 500px;
-  background-color: white;
-  border-radius: 12px;
-  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
-  overflow: hidden;
-  display: none;
-  flex-direction: column;
-  animation: transform-ai-slide-up 0.3s ease forwards;
-  border: 1px solid #e0e0e0;
-}
-
-@keyframes transform-ai-slide-up {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Chat Header */
-#transform-ai-chat-header {
-  background: linear-gradient(135deg, #FF8A00 0%, #00B2DB 100%);
-  color: white;
-  padding: 15px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-#transform-ai-chat-header h3 {
-  font-size: 16px;
-  font-weight: 600;
-}
-
-#transform-ai-close-chat-btn {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 20px;
-  cursor: pointer;
-}
-
-/* Chat Messages */
-#transform-ai-chat-messages {
-  flex: 1;
-  padding: 15px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  background-color: #f9f9f9;
-}
-
-.transform-ai-message {
-  max-width: 80%;
-  padding: 12px 16px;
-  border-radius: 18px;
-  font-size: 14px;
-  line-height: 1.4;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-.transform-ai-message.bot {
-  align-self: flex-start;
-  background-color: white;
-  color: #333;
-  border-bottom-left-radius: 5px;
-  border-left: 3px solid #00B2DB;
-}
-
-.transform-ai-message.user {
-  align-self: flex-end;
-  background: linear-gradient(135deg, #0062cc 0%, #00B2DB 100%);
-  color: white;
-  border-bottom-right-radius: 5px;
-}
-
-/* Welcome Message */
-.transform-ai-welcome-container {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  margin-bottom: 5px;
-}
-
-.transform-ai-bot-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #FF8A00 0%, #00B2DB 100%);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  font-size: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  flex-shrink: 0;
-}
-
-.transform-ai-welcome-message-container {
-  flex: 1;
-}
-
-.transform-ai-welcome-heading {
-  font-weight: 600;
-  margin-bottom: 4px;
-  color: #333;
-}
-
-/* Options Buttons */
-.transform-ai-options-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 10px;
-}
-
-.transform-ai-option-button {
-  background-color: white;
-  border: 1px solid #e4e6eb;
-  border-radius: 18px;
-  padding: 8px 12px;
-  font-size: 13px;
-  cursor: pointer;
-  transition: all 0.2s;
-  color: #0062cc;
-}
-
-.transform-ai-option-button:hover {
-  background-color: #f0f7ff;
-  border-color: #00B2DB;
-  transform: translateY(-1px);
-}
-
-/* Chat Input */
-#transform-ai-chat-input-container {
-  padding: 15px;
-  border-top: 1px solid #e4e6eb;
-  background-color: white;
-}
-
-#transform-ai-chat-form {
-  display: flex;
-  gap: 10px;
-}
-
-#transform-ai-chat-input {
-  flex: 1;
-  padding: 12px 15px;
-  border: 1px solid #e4e6eb;
-  border-radius: 20px;
-  outline: none;
-  font-size: 14px;
-  transition: border-color 0.2s;
-}
-
-#transform-ai-chat-input:focus {
-  border-color: #00B2DB;
-  box-shadow: 0 0 0 2px rgba(0, 178, 219, 0.1);
-}
-
-#transform-ai-send-button {
-  background: linear-gradient(135deg, #FF8A00 0%, #00B2DB 100%);
-  border: none;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  color: white;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: all 0.2s;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
-
-#transform-ai-send-button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
-}
-
-/* Typing Indicator */
-.transform-ai-typing-container {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  margin-bottom: 15px;
-}
-
-.transform-ai-typing-indicator {
-  display: inline-flex;
-  align-items: center;
-  background-color: white;
-  padding: 12px 16px;
-  border-radius: 18px;
-  border-bottom-left-radius: 5px;
-  border-left: 3px solid #00B2DB;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-.transform-ai-typing-dot {
-  width: 8px;
-  height: 8px;
-  margin: 0 2px;
-  background-color: #00B2DB;
-  border-radius: 50%;
-  opacity: 0.6;
-  animation: transform-ai-typing-animation 1.4s infinite both;
-}
-
-.transform-ai-typing-dot:nth-child(2) {
-  animation-delay: 0.2s;
-  background-color: #0062cc;
-}
-
-.transform-ai-typing-dot:nth-child(3) {
-  animation-delay: 0.4s;
-  background-color: #FF8A00;
-}
-
-@keyframes transform-ai-typing-animation {
-  0% {
-    opacity: 0.6;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.2);
-  }
-  100% {
-    opacity: 0.6;
-    transform: scale(1);
-  }
-}
-
-#transform-ai-error-message {
-  color: #e74c3c;
-  font-size: 12px;
-  margin-top: 5px;
-  text-align: center;
-}
-
-#transform-ai-connection-status {
-  font-size: 12px;
-  text-align: center;
-  padding: 5px;
-  border-top: 1px solid #e4e6eb;
-  color: #666;
-}
-
-.transform-ai-powered-by {
-  font-size: 11px;
-  text-align: center;
-  padding: 4px;
-  color: #999;
-  background-color: #f9f9f9;
-  border-top: 1px solid #eee;
-}
-
-/* Booking UI Enhancements */
-.transform-ai-booking-steps {
-  display: flex;
-  justify-content: space-between;
-  background-color: #f3f7fa;
-  border-radius: 10px;
-  padding: 8px;
-  margin-top: 10px;
-  margin-bottom: 5px;
-}
-
-.transform-ai-booking-step {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-size: 11px;
-  color: #888;
-  position: relative;
-  flex: 1;
-}
-
-.transform-ai-booking-step.active {
-  color: #00B2DB;
-  font-weight: 500;
-}
-
-.transform-ai-booking-step.completed {
-  color: #FF8A00;
-}
-
-.transform-ai-step-number {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background-color: #f0f0f0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 4px;
-  font-size: 10px;
-  font-weight: bold;
-  color: #999;
-}
-
-.transform-ai-booking-step.active .transform-ai-step-number {
-  background-color: #00B2DB;
-  color: white;
-}
-
-.transform-ai-booking-step.completed .transform-ai-step-number {
-  background-color: #FF8A00;
-  color: white;
-}
-
-.transform-ai-booking-step::after {
-  content: "";
-  position: absolute;
-  top: 10px;
-  left: 50%;
-  width: 100%;
-  height: 1px;
-  background-color: #f0f0f0;
-  z-index: -1;
-}
-
-.transform-ai-booking-step:last-child::after {
-  display: none;
-}
-
-/* Calendar UI */
-.transform-ai-date-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  margin-top: 8px;
-}
-
-.transform-ai-date-option {
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 10px 8px;
-  text-align: center;
-  cursor: pointer;
-  background-color: white;
-  font-size: 12px;
-  transition: all 0.2s;
-}
-
-.transform-ai-date-option:hover {
-  border-color: #00B2DB;
-  background-color: #f0f7fa;
-}
-
-.transform-ai-date-option.selected {
-  border-color: #00B2DB;
-  background-color: #f0f7fa;
-}
-
-.transform-ai-time-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
-  margin-top: 8px;
-}
-
-.transform-ai-time-option {
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 10px 8px;
-  text-align: center;
-  cursor: pointer;
-  background-color: white;
-  font-size: 13px;
-  transition: all 0.2s;
-}
-
-.transform-ai-time-option:hover {
-  border-color: #00B2DB;
-  background-color: #f0f7fa;
-}
-
-.transform-ai-time-option.selected {
-  border-color: #00B2DB;
-  background-color: #f0f7fa;
-}
-
-.transform-ai-booking-actions {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 12px;
-}
-
-.transform-ai-booking-btn {
-  padding: 8px 15px;
-  border-radius: 18px;
-  font-size: 13px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.transform-ai-back-btn {
-  background-color: #f9f9f9;
-  border: 1px solid #e0e0e0;
-  color: #666;
-}
-
-.transform-ai-back-btn:hover {
-  background-color: #f0f0f0;
-}
-
-.transform-ai-next-btn {
-  background: linear-gradient(135deg, #FF8A00 0%, #00B2DB 100%);
-  border: none;
-  color: white;
-}
-
-.transform-ai-next-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-/* Booking confirmation */
-.transform-ai-booking-confirmation {
-  background-color: #f0f9fa;
-  border: 1px solid #d0edf0;
-  border-radius: 10px;
-  padding: 12px;
-  margin-top: 10px;
-}
-
-.transform-ai-confirmation-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-  gap: 8px;
-}
-
-.transform-ai-confirmation-icon {
-  width: 24px;
-  height: 24px;
-  background: linear-gradient(135deg, #FF8A00 0%, #00B2DB 100%);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 14px;
-  font-weight: bold;
-}
-
-.transform-ai-confirmation-title {
-  font-weight: 600;
-  color: #333;
-}
-
-.transform-ai-confirmation-details {
-  margin-top: 5px;
-}
-
-.transform-ai-detail-row {
-  display: flex;
-  margin-bottom: 5px;
-  font-size: 13px;
-}
-
-.transform-ai-detail-label {
-  font-weight: 500;
-  color: #666;
-  width: 70px;
-  flex-shrink: 0;
-}
-
-.transform-ai-detail-value {
-  color: #333;
-}
-
-/* Enhanced Mobile Responsiveness */
-@media (max-width: 768px) {
-  /* Chat window - tablet size */
-  #transform-ai-chat-window {
-    width: 85%;
-    max-width: 400px;
-    height: 500px;
-    right: 10px;
-    bottom: 80px;
-  }
-  
-  /* Input container adjustments */
-  #transform-ai-chat-input-container {
-    padding: 10px;
-  }
-  
-  /* Input field adjustments */
-  #transform-ai-chat-input {
-    font-size: 16px; /* Prevents zoom on mobile when focusing */
-  }
-}
-
-@media (max-width: 480px) {
-  /* Chat window - mobile size */
-  #transform-ai-chat-window {
-    width: 92%;
-    height: 70vh; /* Use viewport height */
-    max-height: 600px;
-    right: 4%;
-    left: 4%;
-    bottom: 80px;
-  }
-  
-  /* Chat button position */
-  #transform-ai-chat-button {
-    right: 10px;
-    bottom: 10px;
-  }
-  
-  /* Header adjustments */
-  #transform-ai-chat-header {
-    padding: 10px 15px;
-  }
-  
-  /* Messages container */
-  #transform-ai-chat-messages {
-    padding: 10px;
-  }
-  
-  /* Message bubbles */
-  .transform-ai-message {
-    max-width: 85%;
-    padding: 10px 12px;
-    font-size: 14px;
-  }
-  
-  /* Option buttons container */
-  .transform-ai-options-container {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  
-  /* Option buttons */
-  .transform-ai-option-button {
-    margin: 3px;
-    padding: 8px 10px;
-    font-size: 12px;
-  }
-  
-  /* Date and time grids for booking */
-  .transform-ai-date-grid,
-  .transform-ai-time-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  
-  /* Input container - stick to bottom */
-  #transform-ai-chat-input-container {
-    position: sticky;
-    bottom: 0;
-    background: white;
-    z-index: 5;
-    padding: 8px 10px;
-  }
-  
-  /* Input adjustments for mobile */
-  #transform-ai-chat-input {
-    padding: 10px;
-    font-size: 16px; /* Prevents zoom on mobile */
-  }
-  
-  /* Send button adjustments */
-  #transform-ai-send-button {
-    width: 36px;
-    height: 36px;
-  }
-  
-  /* Welcome message container adjustments */
-  .transform-ai-welcome-container {
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  /* Bot avatar position on mobile */
-  .transform-ai-bot-avatar {
-    margin-bottom: 5px;
-  }
-  
-  /* Typing indicator positioning */
-  .transform-ai-typing-container {
-    align-items: center;
-  }
-  
-  /* Booking UI adjustments */
-  .transform-ai-booking-steps {
-    padding: 5px;
-  }
-  
-  .transform-ai-booking-step {
-    font-size: 10px;
-  }
-  
-  .transform-ai-step-number {
-    width: 18px;
-    height: 18px;
-  }
-}
-
-/* Very small screens - full screen chat */
-@media (max-width: 350px) {
-  #transform-ai-chat-window {
-    width: 100%;
-    height: 100vh;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    border-radius: 0;
-  }
-  
-  #transform-ai-chat-button {
-    bottom: 10px;
-    right: 10px;
-  }
-}
-
-/* Fix touch behavior on iOS */
-@media (pointer: coarse) {
-  #transform-ai-chat-input,
-  .transform-ai-option-button,
-  #transform-ai-send-button,
-  .transform-ai-date-option,
-  .transform-ai-time-option,
-  .transform-ai-booking-btn {
-    cursor: pointer;
-    -webkit-tap-highlight-color: rgba(0,0,0,0);
-    touch-action: manipulation;
-  }
-  
-  /* Prevent double-tap zoom */
-  * {
-    touch-action: manipulation;
-  }
-}
-
-/* Fix for notched phones */
-@supports (padding-bottom: env(safe-area-inset-bottom)) {
-  #transform-ai-chat-container {
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-  
-  #transform-ai-chat-input-container {
-    padding-bottom: calc(15px + env(safe-area-inset-bottom));
-  }
-}
-
-/* Use CSS custom property for vh units to fix iOS Safari issues */
-:root {
-  --vh: 1vh;
-}
-
-@media (max-width: 480px) {
-  #transform-ai-chat-window {
-    height: calc(var(--vh, 1vh) * 70);
-  }
-}
-
-@media (max-width: 350px) {
-  #transform-ai-chat-window {
-    height: calc(var(--vh, 1vh) * 100);
-  }
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+        }
+
+        /* Chat Widget Styles */
+        #chat-widget-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        /* Chat Button */
+        #chat-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FF8A00 0%, #00B2DB 100%); /* Orange to Teal gradient */
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        #chat-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        #chat-button .icon {
+            height: 28px;
+            width: auto;
+            display: block;
+            margin: auto; /* Centers the logo in the button */
+            object-fit: contain; /* Ensures the logo fits properly */
+        }
+
+        /* Chat Window */
+        #chat-window {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            width: 350px;
+            height: 500px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            display: none;
+            flex-direction: column;
+            animation: slide-up 0.3s ease forwards;
+            border: 1px solid #e0e0e0;
+        }
+
+        @keyframes slide-up {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Chat Header */
+        #chat-header {
+            background: linear-gradient(135deg, #FF8A00 0%, #00B2DB 100%); /* Orange to Teal gradient */
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #chat-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        #close-chat-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        /* Chat Messages */
+        #chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background-color: #f9f9f9;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 14px;
+            line-height: 1.4;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .message.bot {
+            align-self: flex-start;
+            background-color: white;
+            color: #333;
+            border-bottom-left-radius: 5px;
+            border-left: 3px solid #00B2DB; /* Teal accent */
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background: linear-gradient(135deg, #0062cc 0%, #00B2DB 100%); /* Blue to Teal gradient */
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        /* Welcome Message */
+        .welcome-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 5px;
+        }
+
+        .bot-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FF8A00 0%, #00B2DB 100%); /* Orange to Teal gradient */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            flex-shrink: 0;
+        }
+
+        .welcome-message-container {
+            flex: 1;
+        }
+
+        .welcome-heading {
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #333;
+        }
+
+        /* Options Buttons */
+        .options-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .option-button {
+            background-color: white;
+            border: 1px solid #e4e6eb;
+            border-radius: 18px;
+            padding: 8px 12px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #0062cc; /* Blue color */
+        }
+
+        .option-button:hover {
+            background-color: #f0f7ff;
+            border-color: #00B2DB; /* Teal border */
+            transform: translateY(-1px);
+        }
+
+        /* Chat Input */
+        #chat-input-container {
+            padding: 15px;
+            border-top: 1px solid #e4e6eb;
+            background-color: white;
+        }
+
+        #chat-form {
+            display: flex;
+            gap: 10px;
+        }
+
+        #chat-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #e4e6eb;
+            border-radius: 20px;
+            outline: none;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        #chat-input:focus {
+            border-color: #00B2DB; /* Teal border when focused */
+            box-shadow: 0 0 0 2px rgba(0, 178, 219, 0.1);
+        }
+
+        #send-button {
+            background: linear-gradient(135deg, #FF8A00 0%, #00B2DB 100%); /* Orange to Teal gradient */
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.2s;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #send-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Typing Indicator */
+        .typing-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .typing-indicator {
+            display: inline-flex;
+            align-items: center;
+            background-color: white;
+            padding: 12px 16px;
+            border-radius: 18px;
+            border-bottom-left-radius: 5px;
+            border-left: 3px solid #00B2DB;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            margin: 0 2px;
+            background-color: #00B2DB; /* Teal color */
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: typing-animation 1.4s infinite both;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+            background-color: #0062cc; /* Blue color */
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+            background-color: #FF8A00; /* Orange color */
+        }
+
+        @keyframes typing-animation {
+            0% {
+                opacity: 0.6;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+            100% {
+                opacity: 0.6;
+                transform: scale(1);
+            }
+        }
+        
+        #error-message {
+            color: #e74c3c;
+            font-size: 12px;
+            margin-top: 5px;
+            text-align: center;
+        }
+        
+        #connection-status {
+            font-size: 12px;
+            text-align: center;
+            padding: 5px;
+            border-top: 1px solid #e4e6eb;
+            color: #666;
+        }
+        
+        .powered-by {
+            font-size: 11px;
+            text-align: center;
+            padding: 4px;
+            color: #999;
+            background-color: #f9f9f9;
+            border-top: 1px solid #eee;
+        }
+
+        /* Booking UI Enhancements */
+        .booking-steps {
+            display: flex;
+            justify-content: space-between;
+            background-color: #f3f7fa;
+            border-radius: 10px;
+            padding: 8px;
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+
+        .booking-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 11px;
+            color: #888;
+            position: relative;
+            flex: 1;
+        }
+
+        .booking-step.active {
+            color: #00B2DB;
+            font-weight: 500;
+        }
+
+        .booking-step.completed {
+            color: #FF8A00;
+        }
+
+        .step-number {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 4px;
+            font-size: 10px;
+            font-weight: bold;
+            color: #999;
+        }
+
+        .booking-step.active .step-number {
+            background-color: #00B2DB;
+            color: white;
+        }
+
+        .booking-step.completed .step-number {
+            background-color: #FF8A00;
+            color: white;
+        }
+
+        .booking-step::after {
+            content: "";
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            width: 100%;
+            height: 1px;
+            background-color: #f0f0f0;
+            z-index: -1;
+        }
+
+        .booking-step:last-child::after {
+            display: none;
+        }
+
+        /* Calendar UI */
+        .date-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .date-option {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 10px 8px;
+            text-align: center;
+            cursor: pointer;
+            background-color: white;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .date-option:hover {
+            border-color: #00B2DB;
+            background-color: #f0f7fa;
+        }
+
+        .date-option.selected {
+            border-color: #00B2DB;
+            background-color: #f0f7fa;
+        }
+
+        .time-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .time-option {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 10px 8px;
+            text-align: center;
+            cursor: pointer;
+            background-color: white;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .time-option:hover {
+            border-color: #00B2DB;
+            background-color: #f0f7fa;
+        }
+
+        .time-option.selected {
+            border-color: #00B2DB;
+            background-color: #f0f7fa;
+        }
+
+        .booking-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 12px;
+        }
+
+        .booking-btn {
+            padding: 8px 15px;
+            border-radius: 18px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .back-btn {
+            background-color: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            color: #666;
+        }
+
+        .back-btn:hover {
+            background-color: #f0f0f0;
+        }
+
+        .next-btn {
+            background: linear-gradient(135deg, #FF8A00 0%, #00B2DB 100%);
+            border: none;
+            color: white;
+        }
+
+        .next-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Booking confirmation */
+        .booking-confirmation {
+            background-color: #f0f9fa;
+            border: 1px solid #d0edf0;
+            border-radius: 10px;
+            padding: 12px;
+            margin-top: 10px;
+        }
+
+        .confirmation-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            gap: 8px;
+        }
+
+        .confirmation-icon {
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #FF8A00 0%, #00B2DB 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .confirmation-title {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .confirmation-details {
+            margin-top: 5px;
+        }
+
+        .detail-row {
+            display: flex;
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
+
+        .detail-label {
+            font-weight: 500;
+            color: #666;
+            width: 70px;
+            flex-shrink: 0;
+        }
+
+        .detail-value {
+            color: #333;
+        }
+
+        /* Minimal Mobile Responsiveness */
+        @media (max-width: 480px) {
+            #chat-window {
+                width: 90%;
+                height: 500px;
+                right: 5%;
+                bottom: 80px;
+            }
+            
+            #chat-input {
+                font-size: 16px; /* Prevents zoom on mobile */
+            }
+            
+            .date-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
     </style>
 </head>
 <body>
@@ -757,9 +574,9 @@ html, body {
                 <div class="welcome-container">
                     <div class="bot-avatar">🤖</div>
                     <div class="welcome-message-container">
-                        <div class="welcome-heading">Transform AI Solutions</div>
+                        <div class="welcome-heading">TransformAI</div>
                         <div class="message bot">
-                            Hello! I'm your AI assistant from Transform AI Solutions. How can I help with your AI and automation needs today?
+                            Hello! I'm your AI assistant from TransformAI. How can I help with your AI and automation needs today?
                         </div>
                         <div class="options-container">
                             <button class="option-button">Our services</button>
@@ -784,7 +601,7 @@ html, body {
                 </form>
                 <div id="error-message"></div>
             </div>
-            <div class="powered-by">Powered by Transform AI Solutions</div>
+            <div class="powered-by">Powered by Transform AI</div>
         </div>
     </div>
     <script src="api-config.js"></script>
@@ -805,9 +622,6 @@ html, body {
         let isConnected = false;
         let isBookingFlow = false;
         let currentBookingStep = null;
-        
-        
-
         
         // Event Listeners
         chatButton.addEventListener('click', openChat);

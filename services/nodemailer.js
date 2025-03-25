@@ -115,7 +115,7 @@ const sendConfirmationEmail = async (appointment) => {
   // Prepare email options
   const mailOptions = {
     to: appointment.email,
-    subject: 'Appointment Confirmation - Transform AI Solutions',
+    subject: 'Appointment Confirmation - TransformAI',
     html: getConfirmationEmailHtml(appointment, baseUrl),
     text: `
       Appointment Confirmation
@@ -131,7 +131,7 @@ const sendConfirmationEmail = async (appointment) => {
       ${baseUrl}/cancel-appointment
       
       Best regards,
-      Transform AI Solutions Team
+      TransformAI Team
     `
   };
 
@@ -160,7 +160,7 @@ const sendCancellationEmail = async (appointment) => {
   // Prepare email options
   const mailOptions = {
     to: appointment.email,
-    subject: 'Appointment Cancelled - Transform AI Solutions',
+    subject: 'Appointment Cancelled - TransformAI',
     html: getCancellationEmailHtml(appointment),
     text: `
       Appointment Cancellation
@@ -176,7 +176,7 @@ const sendCancellationEmail = async (appointment) => {
       https://transform-ai-solutions.com/booking
 
       Best regards,
-      Transform AI Solutions Team
+      TransformAI Team
     `
   };
 
