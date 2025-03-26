@@ -1,4 +1,4 @@
-// email-templates.js - Email templates for appointment system
+// email-templates.js - Professional email templates for appointment system
 const path = require('path');
 
 // Generate a cancellation link with a secure token
@@ -23,21 +23,23 @@ function getConfirmationEmailHtml(appointment, baseUrl) {
         <title>Appointment Confirmation</title>
         <style>
             body {
-                font-family: Arial, sans-serif;
+                font-family: 'Arial', 'Helvetica', sans-serif;
                 line-height: 1.6;
-                color: #333;
+                color: #333333;
                 margin: 0;
                 padding: 0;
+                background-color: #f9f9f9;
             }
             .container {
                 max-width: 600px;
                 margin: 0 auto;
                 padding: 20px;
+                background-color: #ffffff;
                 border: 1px solid #e0e0e0;
                 border-radius: 5px;
             }
             .header {
-                background: linear-gradient(135deg, #FF8A00 0%, #00B2DB 100%);
+                background-color: #00B2DB;
                 color: white;
                 padding: 20px;
                 text-align: center;
@@ -51,6 +53,7 @@ function getConfirmationEmailHtml(appointment, baseUrl) {
                 padding: 15px;
                 border-radius: 5px;
                 margin: 20px 0;
+                border: 1px solid #e0e0e0;
             }
             .detail-row {
                 margin-bottom: 10px;
@@ -61,30 +64,46 @@ function getConfirmationEmailHtml(appointment, baseUrl) {
             }
             .button {
                 display: inline-block;
-                background-color: #FF3A30;
+                background-color: #00B2DB;
                 color: white;
                 text-decoration: none;
                 padding: 10px 20px;
                 border-radius: 4px;
                 margin-top: 15px;
+                font-weight: bold;
             }
             .footer {
                 text-align: center;
                 margin-top: 30px;
-                color: #888;
+                padding-top: 20px;
+                border-top: 1px solid #e0e0e0;
+                color: #888888;
                 font-size: 14px;
+            }
+            .logo {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            .social {
+                margin-top: 15px;
+            }
+            .social a {
+                display: inline-block;
+                margin: 0 10px;
+                color: #00B2DB;
+                text-decoration: none;
             }
         </style>
     </head>
     <body>
         <div class="container">
             <div class="header">
-                <h1>Appointment Confirmed</h1>
+                <h1>Appointment Confirmation</h1>
             </div>
             <div class="content">
-                <p>Hello ${appointment.name},</p>
+                <p>Dear ${appointment.name},</p>
                 
-                <p>Your appointment with TransformAI has been confirmed. Here are the details:</p>
+                <p>Thank you for scheduling an appointment with TransformAI. We have confirmed your appointment details below:</p>
                 
                 <div class="appointment-details">
                     <div class="detail-row">
@@ -101,9 +120,13 @@ function getConfirmationEmailHtml(appointment, baseUrl) {
                     </div>
                 </div>
                 
-                <p>If you need to cancel or reschedule, please click the button below:</p>
+                <p>If you need to cancel or reschedule your appointment, please use the secure link below:</p>
                 
-                <a href="${cancellationLink}" class="button">Cancel Appointment</a>
+                <div style="text-align: center;">
+                    <a href="${cancellationLink}" class="button">Manage Appointment</a>
+                </div>
+                
+                <p>If you have any questions before your appointment, please don't hesitate to contact our support team at <a href="mailto:support@transform-ai-solutions.com">support@transform-ai-solutions.com</a>.</p>
                 
                 <p>We look forward to meeting with you!</p>
                 
@@ -112,6 +135,12 @@ function getConfirmationEmailHtml(appointment, baseUrl) {
             
             <div class="footer">
                 <p>© ${new Date().getFullYear()} TransformAI. All rights reserved.</p>
+                <p>TransformAI Solutions Inc., 123 Tech Avenue, San Francisco, CA 94103</p>
+                <div class="social">
+                    <a href="https://twitter.com/transformai">Twitter</a> | 
+                    <a href="https://linkedin.com/company/transformai">LinkedIn</a> | 
+                    <a href="https://transform-ai-solutions.com">Website</a>
+                </div>
             </div>
         </div>
     </body>
@@ -130,21 +159,23 @@ function getCancellationEmailHtml(appointment) {
         <title>Appointment Cancelled</title>
         <style>
             body {
-                font-family: Arial, sans-serif;
+                font-family: 'Arial', 'Helvetica', sans-serif;
                 line-height: 1.6;
-                color: #333;
+                color: #333333;
                 margin: 0;
                 padding: 0;
+                background-color: #f9f9f9;
             }
             .container {
                 max-width: 600px;
                 margin: 0 auto;
                 padding: 20px;
+                background-color: #ffffff;
                 border: 1px solid #e0e0e0;
                 border-radius: 5px;
             }
             .header {
-                background-color: #FF3A30;
+                background-color: #555555;
                 color: white;
                 padding: 20px;
                 text-align: center;
@@ -158,8 +189,8 @@ function getCancellationEmailHtml(appointment) {
                 padding: 15px;
                 border-radius: 5px;
                 margin: 20px 0;
-                text-decoration: line-through;
-                color: #888;
+                border: 1px solid #e0e0e0;
+                color: #777777;
             }
             .detail-row {
                 margin-bottom: 10px;
@@ -176,12 +207,28 @@ function getCancellationEmailHtml(appointment) {
                 padding: 10px 20px;
                 border-radius: 4px;
                 margin-top: 15px;
+                font-weight: bold;
             }
             .footer {
                 text-align: center;
                 margin-top: 30px;
-                color: #888;
+                padding-top: 20px;
+                border-top: 1px solid #e0e0e0;
+                color: #888888;
                 font-size: 14px;
+            }
+            .logo {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            .social {
+                margin-top: 15px;
+            }
+            .social a {
+                display: inline-block;
+                margin: 0 10px;
+                color: #00B2DB;
+                text-decoration: none;
             }
         </style>
     </head>
@@ -191,9 +238,9 @@ function getCancellationEmailHtml(appointment) {
                 <h1>Appointment Cancelled</h1>
             </div>
             <div class="content">
-                <p>Hello ${appointment.name},</p>
+                <p>Dear ${appointment.name},</p>
                 
-                <p>Your appointment with TransformAI has been cancelled. Here are the details of the cancelled appointment:</p>
+                <p>We confirm that your appointment with TransformAI has been cancelled. Here are the details of the cancelled appointment:</p>
                 
                 <div class="appointment-details">
                     <div class="detail-row">
@@ -210,9 +257,13 @@ function getCancellationEmailHtml(appointment) {
                     </div>
                 </div>
                 
-                <p>If you'd like to schedule a new appointment, please visit our website:</p>
+                <p>Would you like to schedule a new appointment? You can do so by visiting our booking page:</p>
                 
-                <a href="https://transform-ai-solutions.com/booking" class="button">Book New Appointment</a>
+                <div style="text-align: center;">
+                    <a href="https://transform-ai-solutions.com/booking" class="button">Schedule New Appointment</a>
+                </div>
+                
+                <p>If you have any questions, please contact our support team at <a href="mailto:support@transform-ai-solutions.com">support@transform-ai-solutions.com</a>.</p>
                 
                 <p>Thank you for your understanding.</p>
                 
@@ -221,6 +272,12 @@ function getCancellationEmailHtml(appointment) {
             
             <div class="footer">
                 <p>© ${new Date().getFullYear()} TransformAI. All rights reserved.</p>
+                <p>TransformAI Solutions Inc., 123 Tech Avenue, San Francisco, CA 94103</p>
+                <div class="social">
+                    <a href="https://twitter.com/transformai">Twitter</a> | 
+                    <a href="https://linkedin.com/company/transformai">LinkedIn</a> | 
+                    <a href="https://transform-ai-solutions.com">Website</a>
+                </div>
             </div>
         </div>
     </body>
