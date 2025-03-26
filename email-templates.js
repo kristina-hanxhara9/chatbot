@@ -4,9 +4,8 @@ const path = require('path');
 // Generate a cancellation link with a secure token
 function generateCancellationLink(baseUrl, appointmentId, token) {
     // Make sure we're using the full server URL for the cancellation link
-    // This prevents localhost issues by ensuring SERVER_URL is used
-    const API_URL = typeof SERVER_URL !== 'undefined' ? SERVER_URL : baseUrl;
-    return `${API_URL}/cancel-appointment.html?id=${appointmentId}&token=${token}`;
+    // The baseUrl should be the SERVER_URL from api-config.js
+    return `${baseUrl}/cancel-appointment.html?id=${appointmentId}&token=${token}`;
 }
 
 // Confirmation email template

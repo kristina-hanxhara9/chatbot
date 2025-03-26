@@ -192,12 +192,7 @@
             </div>
         </div>
     </div>
-    <script>
-        // Define API_URL and SERVER_URL to ensure they're available
-        // This is a fallback in case api-config.js doesn't load properly
-        var API_URL = window.API_URL || window.location.origin;
-        var SERVER_URL = window.SERVER_URL || window.location.origin;
-    </script>
+    <!-- Load API configuration -->
     <script src="api-config.js"></script>
 
     <script>
@@ -241,8 +236,8 @@
             }
             
             try {
-                // Fixed API endpoint to match server structure
-                const response = await fetch(`${API_URL}/api/appointments/verify?id=${appointmentId}&token=${token}`);
+                // Use the correct APPOINTMENT_VERIFY_URL from api-config.js
+                const response = await fetch(`${APPOINTMENT_VERIFY_URL}?id=${appointmentId}&token=${token}`);
                 
                 if (!response.ok) {
                     throw new Error('Invalid or expired link');
@@ -271,8 +266,8 @@
             showState(loadingState);
             
             try {
-                // Fixed API endpoint to match SERVER_URL format
-                const response = await fetch(`${API_URL}/api/appointments/cancel`, {
+                // Use the correct APPOINTMENT_CANCEL_URL from api-config.js
+                const response = await fetch(`${APPOINTMENT_CANCEL_URL}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
