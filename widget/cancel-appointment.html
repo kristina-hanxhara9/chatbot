@@ -145,7 +145,7 @@
                 We couldn't find your appointment. The link may have expired or is invalid.
             </div>
             <div class="text-center mt-4">
-                <a href="/booking.html" class="btn btn-primary">Book a New Appointment</a>
+                <a href="https://transform-ai-solutions.onrender.com/" class="btn btn-primary">Return to Homepage</a>
             </div>
         </div>
         
@@ -173,7 +173,7 @@
             </div>
             
             <div class="d-flex justify-content-between mt-4">
-                <a href="/" class="btn btn-outline-secondary">Keep Appointment</a>
+                <a href="https://transform-ai-solutions.onrender.com/" class="btn btn-outline-secondary">Keep Appointment</a>
                 <button id="cancel-btn" class="btn btn-danger">Cancel Appointment</button>
             </div>
         </div>
@@ -188,13 +188,12 @@
             </div>
             <p class="text-center">Thank you for letting us know. If you'd like to schedule a new appointment, you can do so at any time.</p>
             <div class="text-center mt-4">
-                <a href="/booking.html" class="btn btn-primary">Book a New Appointment</a>
+                <a href="https://transform-ai-solutions.onrender.com/" class="btn btn-primary">Return to Homepage</a>
             </div>
         </div>
     </div>
-    <!-- Load API configuration -->
-    <script src="api-config.js"></script>
 
+    <script src="api-config.js"></script>
     <script>
         // Get appointment ID and token from URL
         const urlParams = new URLSearchParams(window.location.search);
@@ -236,8 +235,8 @@
             }
             
             try {
-                // Use the correct APPOINTMENT_VERIFY_URL from api-config.js
-                const response = await fetch(`${APPOINTMENT_VERIFY_URL}?id=${appointmentId}&token=${token}`);
+                // Using the exact endpoint format from the server code
+                const response = await fetch(`${SERVER_URL}/api/appointments/verify/${appointmentId}?token=${token}`);
                 
                 if (!response.ok) {
                     throw new Error('Invalid or expired link');
@@ -266,24 +265,27 @@
             showState(loadingState);
             
             try {
-                // Use the correct APPOINTMENT_CANCEL_URL from api-config.js
-                const response = await fetch(`${APPOINTMENT_CANCEL_URL}`, {
+                // Using the exact endpoint format from the server code
+                const response = await fetch(`${SERVER_URL}/api/appointments/cancel/${appointmentId}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ 
-                        id: appointmentId,
-                        token: token 
-                    })
+                    body: JSON.stringify({ token })
                 });
                 
                 if (!response.ok) {
-                    throw new Error('Failed to cancel appointment');
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Failed to cancel appointment');
                 }
                 
                 // Show success state
                 showState(successState);
+                
+                // Add redirect after cancellation is complete
+                setTimeout(() => {
+                    window.location.href = 'https://transform-ai-solutions.onrender.com/';
+                }, 5000); // 5 second delay before redirecting
                 
             } catch (error) {
                 console.error('Error cancelling appointment:', error);
