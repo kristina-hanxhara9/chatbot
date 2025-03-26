@@ -192,6 +192,12 @@
             </div>
         </div>
     </div>
+    <script>
+        // Define API_URL and SERVER_URL to ensure they're available
+        // This is a fallback in case api-config.js doesn't load properly
+        var API_URL = window.API_URL || window.location.origin;
+        var SERVER_URL = window.SERVER_URL || window.location.origin;
+    </script>
     <script src="api-config.js"></script>
 
     <script>
