@@ -130,13 +130,15 @@ function generateDefaultSlots() {
 }
 
 // Get available appointment slots - FIXED VERSION
-async function getAvailableSlots(startDate, endDate) {
+async function getAvailableSlots(startDate, endDate, fullYear = false) {
   try {
-    console.log("getAvailableSlots called:", 
-      startDate ? startDate.toISOString() : 'default', 
-      endDate ? endDate.toISOString() : 'default');
+    console.log("getAvailableSlots called with params:", 
+      startDate ? startDate.toISOString() : 'null', 
+      endDate ? endDate.toISOString() : 'null',
+      fullYear);
     
-    // Default to showing slots for an entire year if no date range specified
+    // Default to showing slots for the next 30 days if no date range specified
+    // unless fullYear is true
     if (!startDate) {
       startDate = new Date();
       startDate.setHours(0, 0, 0, 0); // Beginning of today
@@ -144,7 +146,11 @@ async function getAvailableSlots(startDate, endDate) {
     
     if (!endDate) {
       endDate = new Date(startDate);
-      endDate.setFullYear(endDate.getFullYear() + 1); // Show a full year of slots
+      if (fullYear) {
+        endDate.setFullYear(endDate.getFullYear() + 1); // Show a full year of slots
+      } else {
+        endDate.setDate(endDate.getDate() + 30); // Just show next 30 days by default
+      }
       endDate.setHours(23, 59, 59, 999);
     }
     
