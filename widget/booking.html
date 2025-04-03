@@ -5,9 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book a Meeting - TransformAI</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script>
-        
-    </script>
     <style>
         :root {
             --primary-color: #00B2DB;
@@ -390,6 +387,16 @@
             margin-bottom: 20px;
             display: none;
         }
+
+        /* Debug Panel */
+        .debug-panel {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            font-size: 12px;
+            display: none;
+        }
         
         /* Mobile Responsive */
         @media (max-width: 768px) {
@@ -419,6 +426,9 @@
             <h1>Book a Meeting</h1>
             <p>Schedule a consultation with our TransformAI team</p>
         </div>
+        
+        <!-- Debug button (hidden by default) -->
+        <button id="debug-btn" class="btn btn-sm btn-secondary position-absolute top-0 end-0 m-2" style="display: none;">Debug</button>
         
         <div class="steps-container">
             <div class="steps">
@@ -552,11 +562,20 @@
             
             <button type="button" class="btn btn-primary" id="done-btn">Done</button>
         </div>
+        
+        <!-- Debug Panel (hidden by default) -->
+        <div id="debug-panel" class="debug-panel">
+            <h5>Debug Information</h5>
+            <pre id="debug-info"></pre>
+            <button id="refresh-slots-btn" class="btn btn-sm btn-warning">Force Refresh Slots</button>
+        </div>
     </div>
     <script src="api-config.js"></script>
 
     <script>
-
+        // Constants
+        const SLOTS_LOADING_TIMEOUT = 15000; // 15 seconds timeout for loading slots
+        
         // Global variables
         let availableSlots = [];
         let selectedDate = null;
@@ -597,18 +616,59 @@
             try {
                 errorMessage.style.display = 'none';
                 
-                const response = await fetch(`${API_URL}/api/appointments/slots`);
+                // Create a timeout promise
+                const timeoutPromise = new Promise((_, reject) =>
+                    setTimeout(() => reject(new Error('Request timed out')), SLOTS_LOADING_TIMEOUT)
+                );
+                
+                // Create the fetch promise
+                const fetchPromise = fetch(`${API_URL}/api/appointments/slots`);
+                
+                // Race the fetch against the timeout
+                const response = await Promise.race([fetchPromise, timeoutPromise]);
                 
                 if (!response.ok) {
                     throw new Error('Failed to load available slots');
                 }
                 
                 const data = await response.json();
-                availableSlots = data;
+                console.log(`Loaded ${data.length} available slots`);
+                
+                // If no slots available, try to refresh them
+                if (data.length === 0) {
+                    console.log("No available slots received. Attempting to refresh slots...");
+                    
+                    // Show message to user
+                    errorMessage.textContent = "No available appointment slots found. Refreshing slots...";
+                    errorMessage.style.display = 'block';
+                    
+                    // Call the refresh endpoint
+                    const refreshResponse = await fetch(`${API_URL}/api/appointments/slots/refresh`, {
+                        method: 'POST'
+                    });
+                    
+                    if (!refreshResponse.ok) {
+                        throw new Error('Failed to refresh slots');
+                    }
+                    
+                    // Try fetching slots again after refresh
+                    const refreshedSlotsResponse = await fetch(`${API_URL}/api/appointments/slots`);
+                    if (!refreshedSlotsResponse.ok) {
+                        throw new Error('Failed to fetch refreshed slots');
+                    }
+                    
+                    const refreshedData = await refreshedSlotsResponse.json();
+                    console.log(`Loaded ${refreshedData.length} refreshed slots`);
+                    
+                    availableSlots = refreshedData;
+                } else {
+                    availableSlots = data;
+                }
                 
                 // Hide loading, show calendar
                 loadingCalendar.style.display = 'none';
                 calendarContent.style.display = 'block';
+                errorMessage.style.display = 'none';
                 
                 renderCalendar();
             } catch (error) {
@@ -639,9 +699,27 @@
             
             // Get dates with available slots
             const datesWithSlots = new Set();
+            const slotsPerDate = {};
+            
             availableSlots.forEach(slot => {
                 const slotDate = new Date(slot.date);
-                datesWithSlots.add(slotDate.toISOString().split('T')[0]);
+                const dateString = slotDate.toISOString().split('T')[0];
+                datesWithSlots.add(dateString);
+                
+                // Count slots per date for debug info
+                if (!slotsPerDate[dateString]) {
+                    slotsPerDate[dateString] = 1;
+                } else {
+                    slotsPerDate[dateString]++;
+                }
+            });
+            
+            // Update debug info
+            updateDebugInfo({
+                totalSlots: availableSlots.length,
+                month: monthDisplay.textContent,
+                datesWithSlots: datesWithSlots.size,
+                slotsPerDate: slotsPerDate
             });
             
             // Add days from previous month
@@ -679,8 +757,20 @@
                     
                     // Add click event
                     dayDiv.addEventListener('click', () => selectDate(currentDate));
+                    
+                    // Add count of slots as data attribute for debugging
+                    if (slotsPerDate[dateString]) {
+                        dayDiv.setAttribute('data-slots', slotsPerDate[dateString]);
+                        dayDiv.setAttribute('title', `${slotsPerDate[dateString]} available time slots`);
+                    }
                 } else {
-                    dayDiv.classList.add('inactive');
+                    // Past dates should be inactive
+                    if (currentDate < today) {
+                        dayDiv.classList.add('inactive');
+                    } else {
+                        // Future dates with no slots should be clearly marked as unavailable
+                        dayDiv.classList.add('inactive');
+                    }
                 }
                 
                 calendarDays.appendChild(dayDiv);
@@ -890,6 +980,64 @@
             }
         }
         
+        // Debug functions
+        function updateDebugInfo(info) {
+            const debugInfo = document.getElementById('debug-info');
+            if (debugInfo) {
+                debugInfo.textContent = JSON.stringify(info, null, 2);
+            }
+        }
+        
+        async function forceRefreshSlots() {
+            try {
+                const debugInfo = document.getElementById('debug-info');
+                debugInfo.textContent = "Refreshing slots...";
+                
+                const response = await fetch(`${API_URL}/api/appointments/slots/refresh`, {
+                    method: 'POST'
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to refresh slots');
+                }
+                
+                debugInfo.textContent = "Slots refreshed successfully. Reloading page...";
+                
+                // Reload the page after a short delay
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
+                
+            } catch (error) {
+                console.error('Error refreshing slots:', error);
+                const debugInfo = document.getElementById('debug-info');
+                debugInfo.textContent = `Error: ${error.message}`;
+            }
+        }
+        
+        // Check for debug mode
+        function initializeDebugMode() {
+            // Check if debug mode is enabled via URL param
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('debug')) {
+                const debugBtn = document.getElementById('debug-btn');
+                debugBtn.style.display = 'block';
+                
+                // Setup debug button
+                debugBtn.addEventListener('click', () => {
+                    const debugPanel = document.getElementById('debug-panel');
+                    if (debugPanel.style.display === 'block') {
+                        debugPanel.style.display = 'none';
+                    } else {
+                        debugPanel.style.display = 'block';
+                    }
+                });
+                
+                // Setup refresh slots button
+                document.getElementById('refresh-slots-btn').addEventListener('click', forceRefreshSlots);
+            }
+        }
+        
         // Event Listeners
         prevMonthBtn.addEventListener('click', () => {
             currentMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1);
@@ -931,11 +1079,14 @@
         });
         
         doneBtn.addEventListener('click', function() {
-    window.location.href = '/';
-});
+            window.location.href = '/';
+        });
         
         // Initialize
-        document.addEventListener('DOMContentLoaded', loadAvailableSlots);
+        document.addEventListener('DOMContentLoaded', () => {
+            loadAvailableSlots();
+            initializeDebugMode();
+        });
     </script>
 </body>
 </html>

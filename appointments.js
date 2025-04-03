@@ -77,8 +77,9 @@ async function sendTelegramNotification(message) {
   }
 }
 
-// Generate appointment slots for the next 12 months
+// Generate appointment slots for the next 12 months - FIXED VERSION
 function generateDefaultSlots() {
+  console.log("Generating default slots for a full year");
   const slots = [];
   const now = new Date();
   
@@ -93,24 +94,30 @@ function generateDefaultSlots() {
     // Generate slots from 9 AM to 5 PM with 30-minute intervals
     for (let hour = 9; hour < 17; hour++) {
       for (let minute of [0, 30]) {
-        date.setHours(hour, minute, 0, 0);
+        // Create a new date object for this slot to avoid reference issues
+        const slotDate = new Date(date);
+        slotDate.setHours(hour, minute, 0, 0);
         
         // Skip times that are in the past
-        if (date > now) {
+        if (slotDate > now) {
+          const formattedDate = slotDate.toLocaleDateString('en-US', { 
+            weekday: 'long',
+            month: 'long', 
+            day: 'numeric', 
+            year: 'numeric'
+          });
+          
+          const formattedTime = slotDate.toLocaleTimeString('en-US', { 
+            hour: 'numeric', 
+            minute: '2-digit',
+            hour12: true 
+          });
+          
           slots.push({
-            id: `${date.toISOString()}`,
-            date: date.toISOString(),
-            formattedDate: date.toLocaleDateString('en-US', { 
-              weekday: 'long',
-              month: 'long', 
-              day: 'numeric', 
-              year: 'numeric'
-            }),
-            formattedTime: date.toLocaleTimeString('en-US', { 
-              hour: 'numeric', 
-              minute: '2-digit',
-              hour12: true 
-            }),
+            id: slotDate.toISOString(),
+            date: slotDate.toISOString(),
+            formattedDate: formattedDate,
+            formattedTime: formattedTime,
             available: true
           });
         }
@@ -118,21 +125,26 @@ function generateDefaultSlots() {
     }
   }
   
+  console.log(`Generated ${slots.length} slots for the next year`);
   return slots;
 }
 
-// Get available appointment slots
-// Optional modification to getAvailableSlots() for month-by-month loading
+// Get available appointment slots - FIXED VERSION
 async function getAvailableSlots(startDate, endDate) {
   try {
-    // Default to showing slots for the next month if no date range specified
+    console.log("getAvailableSlots called:", 
+      startDate ? startDate.toISOString() : 'default', 
+      endDate ? endDate.toISOString() : 'default');
+    
+    // Default to showing slots for an entire year if no date range specified
     if (!startDate) {
       startDate = new Date();
+      startDate.setHours(0, 0, 0, 0); // Beginning of today
     }
     
     if (!endDate) {
       endDate = new Date(startDate);
-      endDate.setMonth(endDate.getMonth() + 1); // Show a month of slots
+      endDate.setFullYear(endDate.getFullYear() + 1); // Show a full year of slots
       endDate.setHours(23, 59, 59, 999);
     }
     
@@ -140,38 +152,68 @@ async function getAvailableSlots(startDate, endDate) {
     const startIso = startDate.toISOString();
     const endIso = endDate.toISOString();
     
+    console.log(`Querying date range from ${startIso} to ${endIso}`);
+    
+    // First check if we have any slots
+    const totalSlots = await Slot.countDocuments();
+    console.log(`Total slots in database: ${totalSlots}`);
+    
+    if (totalSlots === 0) {
+      console.log("No slots found in database, generating new slots...");
+      await refreshAvailableSlots();
+      console.log("Slots refreshed, continuing with query");
+    }
+    
+    // Get all appointments for this date range
+    const appointments = await Appointment.find({
+      dateTime: { $gte: startIso, $lte: endIso }
+    });
+    
+    console.log(`Found ${appointments.length} existing appointments in date range`);
+    
     // Get slots for the specified date range
     let slots = await Slot.find({
       date: { $gte: startIso, $lte: endIso }
     });
     
-    // If no slots found, generate new ones
-    if (slots.length === 0) {
-      console.log('No slots found, generating new slots...');
-      await refreshAvailableSlots();
-      slots = await Slot.find({
-        date: { $gte: startIso, $lte: endIso }
-      });
-    }
+    console.log(`Found ${slots.length} slots in date range`);
     
-    // Get all appointments
-    const appointments = await Appointment.find({
-      dateTime: { $gte: startIso, $lte: endIso }
-    });
+    // If no slots found in the date range, check for database issues
+    if (slots.length === 0 && totalSlots > 0) {
+      console.log("No slots found in specified date range despite having slots in database");
+      console.log("This may indicate a date range mismatch or database inconsistency");
+      
+      // Try to find some sample slots to diagnose the issue
+      const sampleSlots = await Slot.find().limit(5);
+      if (sampleSlots.length > 0) {
+        console.log("Sample slots:", sampleSlots.map(s => s.date));
+      }
+    }
     
     // Filter out slots that are already booked
     const bookedTimes = new Set(appointments.map(app => app.dateTime));
+    const now = new Date();
+    
     const availableSlots = slots.filter(slot => {
-      return !bookedTimes.has(slot.date) && new Date(slot.date) > new Date();
+      const slotDate = new Date(slot.date);
+      // Only filter out slots that are already booked or in the past
+      return !bookedTimes.has(slot.date) && slotDate > now;
     });
     
-    console.log(`Found ${availableSlots.length} available slots`);
+    console.log(`After filtering, ${availableSlots.length} slots are available`);
+    
+    // If no available slots after filtering but we found slots in the date range
+    if (availableSlots.length === 0 && slots.length > 0) {
+      console.log("All slots were filtered out. Check for booking conflicts or past dates.");
+    }
+    
     return availableSlots;
   } catch (error) {
     console.error('Error getting available slots:', error);
     return [];
   }
 }
+
 // Generate a secure token for appointment cancellation
 function generateCancellationToken() {
   return crypto.randomBytes(32).toString('hex');
@@ -393,21 +435,36 @@ Cancelled at: ${new Date().toLocaleString()}
   }
 }
 
-// Refresh available slots
+// Refresh available slots - FIXED VERSION
 async function refreshAvailableSlots() {
   try {
+    console.log("Starting to refresh available slots...");
+    
     // Clear existing slots
-    await Slot.deleteMany({});
+    const deleteResult = await Slot.deleteMany({});
+    console.log(`Deleted ${deleteResult.deletedCount} existing slots`);
     
     // Generate new slots
     const newSlots = generateDefaultSlots();
+    console.log(`Generated ${newSlots.length} new slots`);
     
-    // Save to database
-    await Slot.insertMany(newSlots);
+    if (newSlots.length === 0) {
+      console.error("Error: No new slots were generated!");
+      return [];
+    }
     
-    // Log the number of new slots
-    console.log(`Refreshed available slots: ${newSlots.length} slots created`);
+    // Save to database in batches to avoid memory issues
+    const BATCH_SIZE = 1000;
+    let inserted = 0;
     
+    for (let i = 0; i < newSlots.length; i += BATCH_SIZE) {
+      const batch = newSlots.slice(i, i + BATCH_SIZE);
+      await Slot.insertMany(batch);
+      inserted += batch.length;
+      console.log(`Inserted ${inserted}/${newSlots.length} slots`);
+    }
+    
+    console.log(`Successfully refreshed available slots: ${inserted} slots created`);
     return newSlots;
   } catch (error) {
     console.error('Error refreshing available slots:', error);
@@ -415,24 +472,45 @@ async function refreshAvailableSlots() {
   }
 }
 
-// Initialize appointment system
+// Initialize appointment system - FIXED VERSION
 async function initialize() {
   try {
+    console.log("Initializing appointment system...");
+    
     // Check if we have slots, if not create them
     const slotsCount = await Slot.countDocuments();
+    console.log(`Found ${slotsCount} existing slots`);
+    
     if (slotsCount === 0) {
-      console.log('No slots found, generating initial slots...');
-      const newSlots = generateDefaultSlots();
-      await Slot.insertMany(newSlots);
-      console.log(`Created ${newSlots.length} initial appointment slots`);
+      console.log('No slots found, creating initial slots...');
+      await refreshAvailableSlots();
     } else {
-      console.log(`Found ${slotsCount} existing slots`);
+      // Check if we have future slots
+      const now = new Date();
+      const futureSlots = await Slot.countDocuments({
+        date: { $gt: now.toISOString() }
+      });
+      
+      console.log(`Found ${futureSlots} future slots`);
+      
+      // If no future slots, refresh them
+      if (futureSlots === 0) {
+        console.log('No future slots available, refreshing slots...');
+        await refreshAvailableSlots();
+      }
     }
+    
+    // Get updated slot counts
+    const updatedSlotsCount = await Slot.countDocuments();
+    const now = new Date();
+    const updatedFutureSlots = await Slot.countDocuments({
+      date: { $gt: now.toISOString() }
+    });
     
     // Get appointment count
     const appointmentsCount = await Appointment.countDocuments();
     
-    console.log(`Initialized appointment system with ${slotsCount} available slots and ${appointmentsCount} existing appointments`);
+    console.log(`Initialized appointment system with ${updatedSlotsCount} total slots, ${updatedFutureSlots} future slots, and ${appointmentsCount} existing appointments`);
     
     // Send a test notification to verify Telegram is working
     try {
