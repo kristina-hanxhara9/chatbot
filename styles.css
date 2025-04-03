@@ -1,0 +1,892 @@
+:root {
+    --primary-color: #ff4a17;
+    --primary-light: #ff6b44;
+    --primary-dark: #d03a12;
+    --secondary-color: #4d4d4d;
+    --text-color: #333;
+    --light-bg: #f9f9f9;
+    --border-color: #e0e0e0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f9f9f9;
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+.header {
+    background-color: var(--secondary-color);
+    padding: 15px 0;
+    position: relative;
+    z-index: 100;
+}
+
+.header .logo img {
+    max-height: 40px;
+}
+
+.header h1 {
+    color: white;
+    margin: 0;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.header .tagline {
+    color: #ccc;
+    font-size: 14px;
+    margin-top: 0;
+}
+
+.demo-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+
+.demo-header {
+    background: var(--primary-color);
+    color: white;
+    padding: 30px;
+    text-align: center;
+}
+
+.demo-header h2 {
+    margin: 0;
+    font-weight: 700;
+    font-size: 32px;
+}
+
+.demo-header p {
+    margin-top: 15px;
+    font-size: 18px;
+    opacity: 0.9;
+}
+
+.setup-section {
+    padding: 30px;
+    background-color: var(--light-bg);
+}
+
+.niche-selector {
+    margin-bottom: 30px;
+}
+
+.setup-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.setup-header h3 {
+    margin: 0;
+    font-weight: 600;
+    color: var(--secondary-color);
+}
+
+.setup-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 50%;
+    margin-right: 15px;
+    font-weight: 700;
+    font-size: 18px;
+}
+
+.niche-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 15px;
+}
+
+.niche-card {
+    background-color: white;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.niche-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    border-color: var(--primary-color);
+}
+
+.niche-card.active {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.niche-card i {
+    font-size: 36px;
+    margin-bottom: 10px;
+    color: var(--primary-color);
+}
+
+.niche-card.active i {
+    color: white;
+}
+
+.niche-card h4 {
+    font-size: 16px;
+    margin: 0;
+    font-weight: 600;
+}
+
+.business-details-form {
+    background-color: white;
+    border-radius: 8px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+}
+
+.business-details-form label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--secondary-color);
+}
+
+.label-with-tip {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.field-tip {
+    font-size: 12px;
+    color: #6c757d;
+    font-weight: normal;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.hours-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.hour-option {
+    background-color: var(--light-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.hour-option:hover {
+    border-color: var(--primary-color);
+    background-color: #fff8f6;
+}
+
+.hour-option.selected {
+    background-color: rgba(255, 74, 23, 0.1);
+    border-color: var(--primary-color);
+    font-weight: 600;
+}
+
+.tag-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.service-tag {
+    background-color: var(--light-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 30px;
+    padding: 8px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+}
+
+.service-tag:hover {
+    border-color: var(--primary-color);
+    background-color: #fff8f6;
+}
+
+.service-tag.selected {
+    background-color: rgba(255, 74, 23, 0.1);
+    border-color: var(--primary-color);
+    font-weight: 600;
+}
+
+.service-tag i {
+    margin-right: 6px;
+    font-size: 12px;
+}
+
+.add-new-tag {
+    background-color: white;
+    border: 1px dashed var(--border-color);
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.add-new-tag i {
+    margin-right: 6px;
+}
+
+.add-new-tag:hover {
+    background-color: white;
+    border-color: var(--primary-color);
+}
+
+.prompt-templates {
+    margin-bottom: 25px;
+}
+
+.template-card {
+    background-color: white;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 15px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.template-card:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.template-card.active {
+    border-width: 2px;
+    border-color: var(--primary-color);
+    background-color: rgba(255, 74, 23, 0.05);
+}
+
+.template-card h5 {
+    color: var(--secondary-color);
+    font-weight: 600;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.template-card h5 i {
+    margin-right: 10px;
+    color: var(--primary-color);
+}
+
+.template-card p {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 0;
+}
+
+.save-template-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 15px;
+}
+
+.save-template-btn:hover {
+    background-color: var(--primary-dark);
+}
+
+.save-template-btn i {
+    margin-right: 8px;
+}
+
+.launch-btn {
+    display: block;
+    width: 100%;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 15px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 20px;
+}
+
+.launch-btn:hover {
+    background-color: var(--primary-dark);
+}
+
+.launch-btn i {
+    margin-right: 8px;
+}
+
+.chat-container {
+    display: flex;
+    height: 600px;
+    overflow: hidden;
+}
+
+.chat-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--border-color);
+}
+
+.chat-header {
+    background-color: var(--secondary-color);
+    color: white;
+    padding: 15px 20px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+
+.chat-header i {
+    margin-right: 10px;
+    font-size: 20px;
+}
+
+.business-info {
+    flex: 0 0 350px;
+    padding: 0;
+    background-color: white;
+    overflow-y: auto;
+}
+
+.business-header {
+    background-color: var(--secondary-color);
+    color: white;
+    padding: 15px 20px;
+    font-weight: 600;
+}
+
+.business-content {
+    padding: 20px;
+}
+
+.business-info h4 {
+    color: var(--primary-color);
+    font-weight: 600;
+    margin: 20px 0 10px;
+}
+
+.business-info p {
+    margin-bottom: 15px;
+    font-size: 15px;
+}
+
+.business-info ul {
+    padding-left: 20px;
+    margin-bottom: 15px;
+}
+
+.business-info ul li {
+    margin-bottom: 5px;
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background-color: #f5f7f9;
+}
+
+.message {
+    margin-bottom: 15px;
+    max-width: 80%;
+}
+
+.message-user {
+    align-self: flex-end;
+    margin-left: auto;
+}
+
+.message-bot {
+    align-self: flex-start;
+}
+
+.message-content {
+    padding: 12px 16px;
+    border-radius: 18px;
+    position: relative;
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+.message-user .message-content {
+    background-color: var(--primary-color);
+    color: white;
+    border-bottom-right-radius: 3px;
+}
+
+.message-bot .message-content {
+    background-color: white;
+    border-bottom-left-radius: 3px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.message-typing {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    display: none;
+}
+
+.typing-bubble {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin-right: 5px;
+    background-color: #ccc;
+    border-radius: 50%;
+    animation: typing 1s infinite;
+}
+
+.typing-bubble:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.typing-bubble:nth-child(3) {
+    animation-delay: 0.4s;
+    margin-right: 0;
+}
+
+@keyframes typing {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-5px); }
+}
+
+.chat-input {
+    padding: 15px 20px;
+    background-color: white;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 12px 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 25px;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.chat-input input:focus {
+    border-color: var(--primary-color);
+}
+
+.chat-input button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    margin-left: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chat-input button:hover {
+    background-color: var(--primary-dark);
+}
+
+.chat-input button i {
+    font-size: 18px;
+}
+
+.setup-section, .chat-section {
+    display: block;
+}
+
+.chat-section {
+    display: none;
+}
+
+.progress-bar-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.progress-step {
+    flex: 1;
+    text-align: center;
+    position: relative;
+}
+
+.progress-step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 19px;
+    right: -40%;
+    width: 80%;
+    height: 3px;
+    background-color: var(--border-color);
+    z-index: 1;
+}
+
+.progress-step.active:not(:last-child)::after,
+.progress-step.completed:not(:last-child)::after {
+    background-color: var(--primary-color);
+}
+
+.step-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--light-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 10px;
+    border: 1px solid var(--border-color);
+    font-weight: 600;
+    position: relative;
+    z-index: 2;
+}
+
+.progress-step.active .step-circle,
+.progress-step.completed .step-circle {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.step-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #666;
+}
+
+.progress-step.active .step-title,
+.progress-step.completed .step-title {
+    color: var(--primary-color);
+}
+
+.back-btn {
+    background-color: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #666;
+}
+
+.back-btn:hover {
+    background-color: var(--light-bg);
+}
+
+.back-btn i {
+    margin-right: 6px;
+}
+
+.nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.next-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 25px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.next-btn:hover {
+    background-color: var(--primary-dark);
+}
+
+.next-btn i {
+    margin-left: 8px;
+}
+
+.step-content {
+    display: none;
+}
+
+.step-content.active {
+    display: block;
+}
+
+.form-check-input:checked {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.modal-dialog.modal-xl {
+    max-width: 90%;
+}
+
+.current-prompt {
+    background-color: rgba(255, 74, 23, 0.05);
+    border: 1px solid var(--primary-color);
+    border-radius: 8px;
+    padding: 12px;
+    margin-top: 15px;
+    font-size: 15px;
+    line-height: 1.5;
+    color: #333;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.collapse-toggle {
+    cursor: pointer;
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.collapse-toggle i {
+    transition: transform 0.3s;
+}
+
+.collapse-toggle.collapsed i {
+    transform: rotate(-90deg);
+}
+
+/* Main CTA button styling (matching website) */
+.main-cta-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-weight: bold;
+    border-radius: 5px;
+    text-decoration: none;
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 14px;
+}
+
+.main-cta-btn:hover {
+    background-color: var(--primary-dark);
+    color: white;
+}
+
+/* Widget button styling */
+#transform-ai-widget-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    color: white;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    border: none;
+}
+
+#transform-ai-widget-button:hover {
+    transform: scale(1.1);
+    background-color: var(--primary-dark);
+}
+
+#transform-ai-widget-button i {
+    font-size: 24px;
+}
+
+#transform-ai-widget-container {
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    width: 360px;
+    height: 550px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    overflow: hidden;
+    z-index: 999;
+    display: none;
+}
+
+.widget-header {
+    background-color: var(--secondary-color);
+    color: white;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.widget-header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.widget-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.widget-body {
+    height: calc(100% - 50px);
+    overflow: hidden;
+}
+
+.widget-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .chat-container {
+        flex-direction: column;
+        height: auto;
+    }
+    
+    .business-info {
+        flex: auto;
+        height: 300px;
+        border-top: 1px solid var(--border-color);
+        border-right: none;
+    }
+    
+    .chat-panel {
+        height: 500px;
+    }
+    
+    .niche-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+    
+    .modal-dialog.modal-xl {
+        max-width: 95%;
+    }
+}
+
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 20px;
+    }
+    
+    .header .tagline {
+        font-size: 12px;
+    }
+    
+    .demo-header h2 {
+        font-size: 26px;
+    }
+    
+    .demo-header p {
+        font-size: 16px;
+    }
+    
+    .niche-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    }
+    
+    .step-circle {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+    }
+    
+    .step-title {
+        font-size: 12px;
+    }
+    
+    .progress-step:not(:last-child)::after {
+        top: 15px;
+    }
+    
+    #transform-ai-widget-container {
+        width: 90%;
+        right: 5%;
+        left: 5%;
+    }
+}
+
+/* For smaller phones */
+@media (max-width: 480px) {
+    .setup-section {
+        padding: 20px 15px;
+    }
+    
+    .business-details-form {
+        padding: 15px;
+    }
+    
+    .niche-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 10px;
+    }
+    
+    .niche-card {
+        padding: 15px 10px;
+    }
+    
+    .niche-card i {
+        font-size: 28px;
+    }
+    
+    .niche-card h4 {
+        font-size: 14px;
+    }
+    
+    .hours-grid {
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    }
+    
+    .chat-container {
+        height: auto;
+    }
+    
+    .chat-panel {
+        height: 400px;
+    }
+    
+    .business-info {
+        height: 250px;
+    }
+}

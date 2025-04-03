@@ -125,14 +125,14 @@ function generateDefaultSlots() {
 // Optional modification to getAvailableSlots() for month-by-month loading
 async function getAvailableSlots(startDate, endDate) {
   try {
-    // Default to showing slots for an entire year if no date range specified
+    // Default to showing slots for the next month if no date range specified
     if (!startDate) {
       startDate = new Date();
     }
     
     if (!endDate) {
       endDate = new Date(startDate);
-      endDate.setFullYear(endDate.getFullYear() + 1); // Show a full year of slots
+      endDate.setMonth(endDate.getMonth() + 1); // Show a month of slots
       endDate.setHours(23, 59, 59, 999);
     }
     
@@ -140,14 +140,23 @@ async function getAvailableSlots(startDate, endDate) {
     const startIso = startDate.toISOString();
     const endIso = endDate.toISOString();
     
-    // Get all appointments
-    const appointments = await Appointment.find({
-      dateTime: { $gte: startIso, $lte: endIso }
-    });
-    
     // Get slots for the specified date range
     let slots = await Slot.find({
       date: { $gte: startIso, $lte: endIso }
+    });
+    
+    // If no slots found, generate new ones
+    if (slots.length === 0) {
+      console.log('No slots found, generating new slots...');
+      await refreshAvailableSlots();
+      slots = await Slot.find({
+        date: { $gte: startIso, $lte: endIso }
+      });
+    }
+    
+    // Get all appointments
+    const appointments = await Appointment.find({
+      dateTime: { $gte: startIso, $lte: endIso }
     });
     
     // Filter out slots that are already booked
@@ -156,13 +165,13 @@ async function getAvailableSlots(startDate, endDate) {
       return !bookedTimes.has(slot.date) && new Date(slot.date) > new Date();
     });
     
+    console.log(`Found ${availableSlots.length} available slots`);
     return availableSlots;
   } catch (error) {
     console.error('Error getting available slots:', error);
     return [];
   }
 }
-
 // Generate a secure token for appointment cancellation
 function generateCancellationToken() {
   return crypto.randomBytes(32).toString('hex');
@@ -396,6 +405,9 @@ async function refreshAvailableSlots() {
     // Save to database
     await Slot.insertMany(newSlots);
     
+    // Log the number of new slots
+    console.log(`Refreshed available slots: ${newSlots.length} slots created`);
+    
     return newSlots;
   } catch (error) {
     console.error('Error refreshing available slots:', error);
@@ -409,9 +421,12 @@ async function initialize() {
     // Check if we have slots, if not create them
     const slotsCount = await Slot.countDocuments();
     if (slotsCount === 0) {
+      console.log('No slots found, generating initial slots...');
       const newSlots = generateDefaultSlots();
       await Slot.insertMany(newSlots);
       console.log(`Created ${newSlots.length} initial appointment slots`);
+    } else {
+      console.log(`Found ${slotsCount} existing slots`);
     }
     
     // Get appointment count

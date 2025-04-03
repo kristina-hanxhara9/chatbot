@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TransformAI - Create Your Custom Business Chatbot</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="logo d-flex align-items-center">
+                    <img src="https://transform-ai-solutions.onrender.com/img/logo.png" alt="TransformAI Logo" class="me-3">
+                    <div>
+                        <h1>TransformAI</h1>
+                        <div class="tagline">AI Solutions for Every Business</div>
+                    </div>
+                </div>
+                <a href="#" class="main-cta-btn">BOOK A FREE CONSULTATION</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Demo Section -->
+    <section class="demo-section">
+        <div class="demo-container">
+            <div class="demo-header">
+                <h2>Create Your Custom Business Chatbot</h2>
+                <p>Design, customize, and test your AI assistant in minutes - no coding required</p>
+            </div>
+            
+            <!-- Setup Section -->
+            <div class="setup-section" id="setup-section">
+                <!-- Progress Bar -->
+                <div class="progress-bar-container">
+                    <div class="progress-step active" data-step="1">
+                        <div class="step-circle">1</div>
+                        <div class="step-title">Industry</div>
+                    </div>
+                    <div class="progress-step" data-step="2">
+                        <div class="step-circle">2</div>
+                        <div class="step-title">Business Details</div>
+                    </div>
+                    <div class="progress-step" data-step="3">
+                        <div class="step-circle">3</div>
+                        <div class="step-title">Services</div>
+                    </div>
+                    <div class="progress-step" data-step="4">
+                        <div class="step-circle">4</div>
+                        <div class="step-title">Customize AI</div>
+                    </div>
+                </div>
+                
+                <!-- Step 1: Choose Industry -->
+                <div class="step-content active" data-step="1">
+                    <div class="setup-header">
+                        <div class="setup-number">1</div>
+                        <h3>Choose Your Industry</h3>
+                    </div>
+                    
+                    <div class="niche-grid">
+                        <div class="niche-card active" data-niche="dental">
+                            <i class="fas fa-tooth"></i>
+                            <h4>Dental Practice</h4>
+                        </div>
+                        <div class="niche-card" data-niche="realEstate">
+                            <i class="fas fa-home"></i>
+                            <h4>Real Estate</h4>
+                        </div>
+                        <div class="niche-card" data-niche="restaurant">
+                            <i class="fas fa-utensils"></i>
+                            <h4>Restaurant</h4>
+                        </div>
+                        <div class="niche-card" data-niche="fitness">
+                            <i class="fas fa-dumbbell"></i>
+                            <h4>Fitness Studio</h4>
+                        </div>
+                        <div class="niche-card" data-niche="salon">
+                            <i class="fas fa-cut"></i>
+                            <h4>Hair Salon</h4>
+                        </div>
+                        <div class="niche-card" data-niche="law">
+                            <i class="fas fa-balance-scale"></i>
+                            <h4>Law Firm</h4>
+                        </div>
+                        <div class="niche-card" data-niche="ecommerce">
+                            <i class="fas fa-shopping-cart"></i>
+                            <h4>E-Commerce</h4>
+                        </div>
+                        <div class="niche-card" data-niche="hotel">
+                            <i class="fas fa-hotel"></i>
+                            <h4>Hotel</h4>
+                        </div>
+                        <div class="niche-card" data-niche="healthcare">
+                            <i class="fas fa-heartbeat"></i>
+                            <h4>Healthcare</h4>
+                        </div>
+                        <div class="niche-card" data-niche="education">
+                            <i class="fas fa-graduation-cap"></i>
+                            <h4>Education</h4>
+                        </div>
+                    </div>
+                    
+                    <div class="nav-buttons">
+                        <button type="button" class="back-btn invisible">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </button>
+                        <button type="button" class="next-btn" data-next-step="2">
+                            Next <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Step 2: Business Details -->
+                <div class="step-content" data-step="2">
+                    <div class="setup-header">
+                        <div class="setup-number">2</div>
+                        <h3>Enter Your Business Details</h3>
+                    </div>
+                    
+                    <div class="business-details-form">
+                        <div class="form-group">
+                            <label for="business-name">Business Name</label>
+                            <input type="text" class="form-control" id="business-name" placeholder="e.g., Smile Bright Dental">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="business-description">Business Description</label>
+                            <textarea class="form-control" id="business-description" rows="3" placeholder="Describe your business in a few sentences..."></textarea>
+                            <small class="form-text text-muted">This will help the AI understand your business better.</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="label-with-tip">
+                                <label>Business Hours</label>
+                                <span class="field-tip">Select the hours that apply to your business</span>
+                            </div>
+                            
+                            <div class="hours-grid">
+                                <div class="hour-option selected" data-hours="standard">
+                                    Standard<br><small>Mon-Fri 9-5</small>
+                                </div>
+                                <div class="hour-option" data-hours="extended">
+                                    Extended<br><small>Mon-Sat 8-8</small>
+                                </div>
+                                <div class="hour-option" data-hours="weekend">
+                                    Weekend<br><small>Includes Sunday</small>
+                                </div>
+                                <div class="hour-option" data-hours="24-7">
+                                    24/7<br><small>Always open</small>
+                                </div>
+                                <div class="hour-option" data-hours="custom" data-bs-toggle="collapse" data-bs-target="#custom-hours">
+                                    Custom<br><small>Your hours</small>
+                                </div>
+                            </div>
+                            
+                            <div class="collapse mt-3" id="custom-hours">
+                                <div class="card card-body">
+                                    <div class="row g-2">
+                                        <div class="col-md-4 mb-2">
+                                            <label class="form-label">Monday</label>
+                                            <select class="form-select form-select-sm">
+                                                <option>9:00 AM - 5:00 PM</option>
+                                                <option>8:00 AM - 8:00 PM</option>
+                                                <option>Closed</option>
+                                                <option>Custom...</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 mb-2">
+                                            <label class="form-label">Tuesday</label>
+                                            <select class="form-select form-select-sm">
+                                                <option>9:00 AM - 5:00 PM</option>
+                                                <option>8:00 AM - 8:00 PM</option>
+                                                <option>Closed</option>
+                                                <option>Custom...</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 mb-2">
+                                            <label class="form-label">Wednesday</label>
+                                            <select class="form-select form-select-sm">
+                                                <option>9:00 AM - 5:00 PM</option>
+                                                <option>8:00 AM - 8:00 PM</option>
+                                                <option>Closed</option>
+                                                <option>Custom...</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 mb-2">
+                                            <label class="form-label">Thursday</label>
+                                            <select class="form-select form-select-sm">
+                                                <option>9:00 AM - 5:00 PM</option>
+                                                <option>8:00 AM - 8:00 PM</option>
+                                                <option>Closed</option>
+                                                <option>Custom...</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 mb-2">
+                                            <label class="form-label">Friday</label>
+                                            <select class="form-select form-select-sm">
+                                                <option>9:00 AM - 5:00 PM</option>
+                                                <option>8:00 AM - 8:00 PM</option>
+                                                <option>Closed</option>
+                                                <option>Custom...</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 mb-2">
+                                            <label class="form-label">Saturday</label>
+                                            <select class="form-select form-select-sm">
+                                                <option>Closed</option>
+                                                <option>9:00 AM - 5:00 PM</option>
+                                                <option>8:00 AM - 8:00 PM</option>
+                                                <option>Custom...</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 mb-2">
+                                            <label class="form-label">Sunday</label>
+                                            <select class="form-select form-select-sm">
+                                                <option>Closed</option>
+                                                <option>10:00 AM - 4:00 PM</option>
+                                                <option>12:00 PM - 5:00 PM</option>
+                                                <option>Custom...</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="business-location">Location</label>
+                            <input type="text" class="form-control" id="business-location" placeholder="e.g., 123 Main Street, New York, NY">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="business-website">Website (Optional)</label>
+                            <input type="text" class="form-control" id="business-website" placeholder="e.g., www.yourwebsite.com">
+                        </div>
+                    </div>
+                    
+                    <div class="nav-buttons">
+                        <button type="button" class="back-btn" data-prev-step="1">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </button>
+                        <button type="button" class="next-btn" data-next-step="3">
+                            Next <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Step 3: Services -->
+                <div class="step-content" data-step="3">
+                    <div class="setup-header">
+                        <div class="setup-number">3</div>
+                        <h3>Select Your Services</h3>
+                    </div>
+                    
+                    <div class="business-details-form">
+                        <div class="form-group">
+                            <div class="label-with-tip">
+                                <label>Services & Products</label>
+                                <span class="field-tip">Select all that apply or add your own</span>
+                            </div>
+                            
+                            <!-- Dental Services -->
+                            <div class="tag-container" id="dental-services">
+                                <div class="service-tag selected" data-tag="checkups">
+                                    <i class="fas fa-check-circle"></i> Regular Check-ups
+                                </div>
+                                <div class="service-tag selected" data-tag="cleaning">
+                                    <i class="fas fa-check-circle"></i> Teeth Cleaning
+                                </div>
+                                <div class="service-tag" data-tag="cosmetic">
+                                    <i class="far fa-circle"></i> Cosmetic Dentistry
+                                </div>
+                                <div class="service-tag" data-tag="whitening">
+                                    <i class="far fa-circle"></i> Teeth Whitening
+                                </div>
+                                <div class="service-tag" data-tag="rootcanal">
+                                    <i class="far fa-circle"></i> Root Canal
+                                </div>
+                                <div class="service-tag" data-tag="implants">
+                                    <i class="far fa-circle"></i> Dental Implants
+                                </div>
+                                <div class="service-tag" data-tag="invisalign">
+                                    <i class="far fa-circle"></i> Invisalign
+                                </div>
+                                <div class="service-tag add-new-tag" id="add-service-btn" data-bs-toggle="modal" data-bs-target="#add-service-modal">
+                                    <i class="fas fa-plus"></i> Add Service
+                                </div>
+                            </div>
+                            
+                            <!-- Real Estate Services -->
+                            <div class="tag-container d-none" id="realEstate-services">
+                                <div class="service-tag selected" data-tag="residential">
+                                    <i class="fas fa-check-circle"></i> Residential Sales
+                                </div>
+                                <div class="service-tag" data-tag="commercial">
+                                    <i class="far fa-circle"></i> Commercial Properties
+                                </div>
+                                <div class="service-tag" data-tag="rentals">
+                                    <i class="far fa-circle"></i> Rentals
+                                </div>
+                                <div class="service-tag" data-tag="property-management">
+                                    <i class="far fa-circle"></i> Property Management
+                                </div>
+                                <div class="service-tag" data-tag="investment">
+                                    <i class="far fa-circle"></i> Investment Properties
+                                </div>
+                                <div class="service-tag" data-tag="first-time">
+                                    <i class="far fa-circle"></i> First-Time Buyers
+                                </div>
+                                <div class="service-tag" data-tag="luxury">
+                                    <i class="far fa-circle"></i> Luxury Homes
+                                </div>
+                                <div class="service-tag add-new-tag" data-bs-toggle="modal" data-bs-target="#add-service-modal">
+                                    <i class="fas fa-plus"></i> Add Service
+                                </div>
+                            </div>
+                            
+                            <!-- Restaurant Services -->
+                            <div class="tag-container d-none" id="restaurant-services">
+                                <div class="service-tag selected" data-tag="dining">
+                                    <i class="fas fa-check-circle"></i> In-restaurant Dining
+                                </div>
+                                <div class="service-tag" data-tag="takeout">
+                                    <i class="far fa-circle"></i> Takeout Service
+                                </div>
+                                <div class="service-tag" data-tag="delivery">
+                                    <i class="far fa-circle"></i> Delivery Service
+                                </div>
+                                <div class="service-tag" data-tag="catering">
+                                    <i class="far fa-circle"></i> Catering
+                                </div>
+                                <div class="service-tag" data-tag="private-events">
+                                    <i class="far fa-circle"></i> Private Events
+                                </div>
+                                <div class="service-tag add-new-tag" data-bs-toggle="modal" data-bs-target="#add-service-modal">
+                                    <i class="fas fa-plus"></i> Add Service
+                                </div>
+                            </div>
+                            
+                            <!-- Fitness Services -->
+                            <div class="tag-container d-none" id="fitness-services">
+                                <div class="service-tag selected" data-tag="personal-training">
+                                    <i class="fas fa-check-circle"></i> Personal Training
+                                </div>
+                                <div class="service-tag" data-tag="group-classes">
+                                    <i class="far fa-circle"></i> Group Classes
+                                </div>
+                                <div class="service-tag" data-tag="nutrition">
+                                    <i class="far fa-circle"></i> Nutrition Coaching
+                                </div>
+                                <div class="service-tag" data-tag="yoga">
+                                    <i class="far fa-circle"></i> Yoga
+                                </div>
+                                <div class="service-tag add-new-tag" data-bs-toggle="modal" data-bs-target="#add-service-modal">
+                                    <i class="fas fa-plus"></i> Add Service
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group mt-4">
+                            <div class="label-with-tip">
+                                <label>Special Features</label>
+                                <span class="field-tip">What makes your business special?</span>
+                            </div>
+                            
+                            <!-- Dental Features -->
+                            <div class="tag-container" id="dental-features">
+                                <div class="service-tag" data-tag="insurance">
+                                    <i class="far fa-circle"></i> Insurance Accepted
+                                </div>
+                                <div class="service-tag" data-tag="financing">
+                                    <i class="far fa-circle"></i> Financing Options
+                                </div>
+                                <div class="service-tag" data-tag="emergency">
+                                    <i class="far fa-circle"></i> Emergency Services
+                                </div>
+                                <div class="service-tag" data-tag="family">
+                                    <i class="far fa-circle"></i> Family-Friendly
+                                </div>
+                                <div class="service-tag" data-tag="latest-tech">
+                                    <i class="far fa-circle"></i> Latest Technology
+                                </div>
+                                <div class="service-tag add-new-tag" data-bs-toggle="modal" data-bs-target="#add-feature-modal">
+                                    <i class="fas fa-plus"></i> Add Feature
+                                </div>
+                            </div>
+                            
+                            <!-- Real Estate Features -->
+                            <div class="tag-container d-none" id="realEstate-features">
+                                <div class="service-tag" data-tag="free-valuation">
+                                    <i class="far fa-circle"></i> Free Property Valuation
+                                </div>
+                                <div class="service-tag" data-tag="virtual-tours">
+                                    <i class="far fa-circle"></i> Virtual Tours
+                                </div>
+                                <div class="service-tag" data-tag="staging">
+                                    <i class="far fa-circle"></i> Home Staging
+                                </div>
+                                <div class="service-tag" data-tag="financing">
+                                    <i class="far fa-circle"></i> Financing Assistance
+                                </div>
+                                <div class="service-tag add-new-tag" data-bs-toggle="modal" data-bs-target="#add-feature-modal">
+                                    <i class="fas fa-plus"></i> Add Feature
+                                </div>
+                            </div>
+                            
+                            <!-- Restaurant Features -->
+                            <div class="tag-container d-none" id="restaurant-features">
+                                <div class="service-tag" data-tag="reservations">
+                                    <i class="far fa-circle"></i> Online Reservations
+                                </div>
+                                <div class="service-tag" data-tag="outdoor">
+                                    <i class="far fa-circle"></i> Outdoor Seating
+                                </div>
+                                <div class="service-tag" data-tag="parking">
+                                    <i class="far fa-circle"></i> Free Parking
+                                </div>
+                                <div class="service-tag add-new-tag" data-bs-toggle="modal" data-bs-target="#add-feature-modal">
+                                    <i class="fas fa-plus"></i> Add Feature
+                                </div>
+                            </div>
+                            
+                            <!-- Fitness Features -->
+                            <div class="tag-container d-none" id="fitness-features">
+                                <div class="service-tag" data-tag="equipment">
+                                    <i class="far fa-circle"></i> Modern Equipment
+                                </div>
+                                <div class="service-tag" data-tag="childcare">
+                                    <i class="far fa-circle"></i> Childcare Available
+                                </div>
+                                <div class="service-tag" data-tag="open-24">
+                                    <i class="far fa-circle"></i> 24/7 Access
+                                </div>
+                                <div class="service-tag add-new-tag" data-bs-toggle="modal" data-bs-target="#add-feature-modal">
+                                    <i class="fas fa-plus"></i> Add Feature
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="nav-buttons">
+                        <button type="button" class="back-btn" data-prev-step="2">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </button>
+                        <button type="button" class="next-btn" data-next-step="4">
+                            Next <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Step 4: Customize AI -->
+                <div class="step-content" data-step="4">
+                    <div class="setup-header">
+                        <div class="setup-number">4</div>
+                        <h3>Customize AI Personality</h3>
+                    </div>
+                    
+                    <div class="business-details-form">
+                        <div class="form-group">
+                            <label>Select AI Personality</label>
+                            
+                            <div class="prompt-templates">
+                                <div class="template-card active" data-template="friendly">
+                                    <h5><i class="fas fa-smile"></i> Friendly & Helpful</h5>
+                                    <p>Warm, approachable, and focuses on building rapport with customers while providing helpful information.</p>
+                                </div>
+                                
+                                <div class="template-card" data-template="professional">
+                                    <h5><i class="fas fa-briefcase"></i> Professional & Formal</h5>
+                                    <p>Polished, business-like tone that emphasizes expertise and maintains professional distance.</p>
+                                </div>
+                                
+                                <div class="template-card" data-template="casual">
+                                    <h5><i class="fas fa-coffee"></i> Casual & Conversational</h5>
+                                    <p>Relaxed, everyday language that makes customers feel comfortable, like talking to a friend.</p>
+                                </div>
+                                
+                                <div class="template-card" data-template="enthusiastic">
+                                    <h5><i class="fas fa-star"></i> Enthusiastic & Energetic</h5>
+                                    <p>Upbeat, passionate tone that shows excitement about your business and creates positive energy.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Communication Style</label>
+                            
+                            <div class="row g-2">
+                                <div class="col-md-6">
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" value="" id="check-concise" checked>
+                                        <label class="form-check-label" for="check-concise">
+                                            Keep responses concise
+                                        </label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" value="" id="check-questions" checked>
+                                        <label class="form-check-label" for="check-questions">
+                                            Ask follow-up questions
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" value="" id="check-informative">
+                                        <label class="form-check-label" for="check-informative">
+                                            Provide detailed information
+                                        </label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" value="" id="check-empathetic" checked>
+                                        <label class="form-check-label" for="check-empathetic">
+                                            Be empathetic to concerns
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>AI Knowledge Focus</label>
+                            <select class="form-select" id="knowledge-focus">
+                                <option value="balanced" selected>Balanced (General + Business-Specific)</option>
+                                <option value="business">Business Focus (Mostly About Your Services)</option>
+                                <option value="industry">Industry Expert (Provides Educational Information)</option>
+                                <option value="sales">Sales-Oriented (Focuses on Conversions)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group mt-4">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <label>Current AI Prompt</label>
+                                <a class="collapse-toggle collapsed" data-bs-toggle="collapse" href="#current-prompt" role="button" aria-expanded="false">
+                                    Show Prompt <i class="fas fa-chevron-down ms-1"></i>
+                                </a>
+                            </div>
+                            
+                            <div class="collapse" id="current-prompt">
+                                <div class="current-prompt">
+                                    You are an AI assistant for a dental practice called Smile Bright Dental. Respond in a friendly and helpful manner. You can assist with scheduling appointments, answering questions about services (Regular check-ups, Teeth cleaning), and providing basic information about the practice. Business hours are Monday-Friday 9-5. Try to be concise in your responses, ask follow-up questions when appropriate, and show empathy when patients express concerns.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group mt-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="check-advanced">
+                                <label class="form-check-label" for="check-advanced">
+                                    <strong>I want to customize the AI prompt manually</strong>
+                                </label>
+                            </div>
+                            <small class="form-text text-muted">For advanced users who want complete control over the AI's behavior.</small>
+                            
+                            <div class="collapse mt-3" id="advanced-prompt">
+                                <textarea class="form-control" rows="8" id="custom-prompt"></textarea>
+                                <div class="d-grid mt-2">
+                                    <button class="save-template-btn" id="update-prompt-btn">
+                                        <i class="fas fa-save"></i> Update Prompt
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="nav-buttons">
+                        <button type="button" class="back-btn" data-prev-step="3">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </button>
+                        <button type="button" class="launch-btn" id="launch-chatbot-btn">
+                            <i class="fas fa-rocket"></i> Launch Your Chatbot
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Chat Section (hidden initially) -->
+            <div class="chat-section" id="chat-section">
+                <div class="chat-container">
+                    <div class="chat-panel">
+                        <div class="chat-header">
+                            <i class="fas fa-comments"></i>
+                            <span id="chat-title">Smile Bright Dental AI Assistant</span>
+                        </div>
+                        <div class="chat-messages" id="chat-messages">
+                            <div class="message message-bot">
+                                <div class="message-content" id="welcome-message">
+                                    Hi there! I'm your dental practice assistant for Smile Bright Dental. How can I help you today? Whether you're looking to schedule an appointment, have questions about our services like regular check-ups or teeth cleaning, or need information about our business hours (Monday-Friday 9-5), I'm here to assist!
+                                </div>
+                            </div>
+                            <div class="message-typing" id="typing-indicator">
+                                <div class="message-content">
+                                    <div class="typing-bubble"></div>
+                                    <div class="typing-bubble"></div>
+                                    <div class="typing-bubble"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chat-input">
+                            <input type="text" id="user-input" placeholder="Type your message here..." />
+                            <button id="send-button">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="business-info">
+                        <div class="business-header">
+                            <span id="business-panel-name">Smile Bright Dental</span>
+                        </div>
+                        <div class="business-content" id="business-info-content">
+                            <h4>About Us</h4>
+                            <p id="about-text">A modern dental practice focused on patient comfort and advanced care.</p>
+                            
+                            <h4>Services</h4>
+                            <ul id="services-list">
+                                <li>Regular check-ups</li>
+                                <li>Teeth cleaning</li>
+                            </ul>
+                            
+                            <h4>Features</h4>
+                            <ul id="features-list">
+                                <li>Insurance accepted</li>
+                                <li>Financing options available</li>
+                            </ul>
+                            
+                            <h4>Business Hours</h4>
+                            <p id="hours-text">Monday-Friday: 9:00 AM - 5:00 PM</p>
+                            
+                            <h4>Location</h4>
+                            <p id="location-text">123 Main Street, San Francisco, CA 94103</p>
+                            
+                            <div class="d-grid gap-2 mt-4">
+                                <button class="btn btn-primary" id="back-to-setup-btn" style="background-color: var(--primary-color); border-color: var(--primary-color);">
+                                    <i class="fas fa-arrow-left me-2"></i> Back to Setup
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Add Service Modal -->
+    <div class="modal fade" id="add-service-modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Custom Service</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="new-service-name" class="form-label">Service Name</label>
+                        <input type="text" class="form-control" id="new-service-name" placeholder="e.g., Pediatric Dentistry">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="save-service-btn" data-bs-dismiss="modal" style="background-color: var(--primary-color); border-color: var(--primary-color);">Add Service</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Feature Modal -->
+    <div class="modal fade" id="add-feature-modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Custom Feature</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="new-feature-name" class="form-label">Feature Name</label>
+                        <input type="text" class="form-control" id="new-feature-name" placeholder="e.g., Wheelchair Accessible">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="save-feature-btn" data-bs-dismiss="modal" style="background-color: var(--primary-color); border-color: var(--primary-color);">Add Feature</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Widget Button (appears on customer websites) -->
+    <div id="transform-ai-widget-button">
+        <i class="fas fa-comments"></i>
+    </div>
+    
+    <!-- Chat Widget Container (appears when button is clicked) -->
+    <div id="transform-ai-widget-container">
+        <div class="widget-header">
+            <h3>Chat with our AI Assistant</h3>
+            <button class="widget-close"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="widget-body">
+            <iframe class="widget-iframe" src="about:blank"></iframe>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/chatbot-demo.js"></script>
+</body>
+</html>
